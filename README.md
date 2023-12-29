@@ -28,3 +28,25 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+
+### TODO
+- React + Typescript (react-ts)
+- Vite, Husky, eslint, prettier [SETUP]
+- (S)CSS/LESS modules, tailwind emotion, material-ui [STYLES]
+- react-router-dom [ROUTING]
+- react-query [API]
+- i18-next [I18N]
+- react-hook-form [FORMS]
+- react-testing-library, vitest [TESTS]
+
+
+### TODO
+- React + Typescript (react-ts)
+- Vite, Husky, eslint, prettier [SETUP]
+- (S)CSS/LESS modules, tailwind emotion, material-ui [STYLES]
+- react-router-dom [ROUTING]
+- react-query [API]
+- i18-next [I18N]
+- react-hook-form [FORMS]
+- react-testing-library, vitest [TESTS]
