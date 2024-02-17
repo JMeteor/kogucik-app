@@ -1,5 +1,13 @@
 {
   "ADD_INVOICE": "Dodaj fakturę",
   "INVOICES": "Faktury",
-  "title": "Witamy w aplikacji react używającej react-i18next"
+  "TABLE": {
+    "HEADERS": {
+      "INVOICE_NUMBER": "Nr.",
+      "CREATED": "Data wystawienia",
+      "VALID_UNTIL": "Data ważności",
+      "AMOUNT": "Kwota",
+      "ACTIONS": "Akcje"
+    }
+  }
 }

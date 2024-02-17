@@ -1,10 +1,7 @@
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
-import Root, {
-  loader as rootLoader,
-  action as rootAction,
-} from './routes/root';
+import Root from './routes/root';
 
 import theme from './theme.ts';
 import Index from './routes';
@@ -16,13 +13,14 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { Suspense } from 'react';
 
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
-    action: rootAction,
     children: [
       { index: true, element: <Index /> },
       {
@@ -60,9 +58,14 @@ const Loader = () => (
 );
 
 export default function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <Suspense fallback={<Loader />}>
-      <Page />
-    </Suspense>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<Loader />}>
+        <Page />
+      </Suspense>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }

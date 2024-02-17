@@ -15,39 +15,18 @@ import {
   DialogActions,
 } from '@mui/material';
 
-import { Invoice } from '../types/Invoice.ts';
-import { OrderLine } from '../types/OrderLine.ts';
 import { useState } from 'react';
-import { formatDateLocale } from '../helpers/formatDateLocale.ts';
+import { useQuery } from 'react-query';
+import { useTranslation } from 'react-i18next';
+
 import { Link } from 'react-router-dom';
 
-const rows: Invoice[] = [
-  {
-    invoiceNumber: '001',
-    createDate: new Date(),
-    dueDate: new Date(),
-    recipient: null,
-    sender: null,
-    items: [],
-  },
-  {
-    invoiceNumber: '002',
-    createDate: new Date(),
-    dueDate: new Date(),
-    recipient: null,
-    sender: null,
-    items: [],
-  },
-];
-
-const totalAmount = (items: OrderLine[]): number => {
-  return items.reduce(
-    (total, item) => total + Number(item.quantity) * Number(item.price),
-    0,
-  );
-};
+import InvoicesService from '../services/invoices/invoicesService.ts';
+import GetItemDto from '../services/invoices/types/GetItemDto.ts';
+import GetAllInvoicesDto from '../services/invoices/types/GetAllInvoicesDto.ts';
 
 function Index() {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
@@ -65,48 +44,56 @@ function Index() {
     setOpen(false);
   };
 
+  const totalAmount = (items: GetItemDto[]) => {
+    return items.reduce((acc, item) => {
+      return acc + item.amount;
+    }, 0);
+  };
+
+  const { data: invoices } = useQuery(
+    'invoices',
+    InvoicesService.fetchAllInvoices,
+  );
+
   return (
     <>
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="left">No.</TableCell>
-              <TableCell align="right">Created</TableCell>
-              <TableCell align="right">Valid until</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell align="left">
+                {t('TABLE.HEADERS.INVOICE_NUMBER')}
+              </TableCell>
+              <TableCell align="right">{t('TABLE.HEADERS.CREATED')}</TableCell>
+              <TableCell align="right">
+                {t('TABLE.HEADERS.VALID_UNTIL')}
+              </TableCell>
+              <TableCell align="right">{t('TABLE.HEADERS.AMOUNT')}</TableCell>
+              <TableCell align="center">{t('TABLE.HEADERS.ACTIONS')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row: Invoice) => (
-              <TableRow
-                key={row.invoiceNumber}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell align="left">
-                  <Link to={`/invoice/${row.invoiceNumber}`}>
-                    {row.invoiceNumber}
-                  </Link>
+            {invoices?.map((invoice: GetAllInvoicesDto, index: number) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <Link to={`/invoice/${invoice.id}`}>{invoice.name}</Link>
                 </TableCell>
+                <TableCell align="right">{invoice.createdAt}</TableCell>
+                <TableCell align="right">{invoice.validUntil}</TableCell>
                 <TableCell align="right">
-                  {formatDateLocale(row.createDate)}
+                  {totalAmount(invoice.items)}
                 </TableCell>
-                <TableCell align="right">
-                  {formatDateLocale(row.dueDate)}
-                </TableCell>
-                <TableCell align="right">{totalAmount(row.items)}</TableCell>
                 <TableCell align="right">
                   <IconButton
                     aria-label="edit"
                     component={Link}
-                    to={`/invoice/${row.invoiceNumber}/edit`}
+                    to={`/invoice/${invoice.id}/edit`}
                   >
                     <Icon>edit</Icon>
                   </IconButton>
                   <IconButton
                     aria-label="delete"
-                    onClick={() => handleDelete(row.invoiceNumber)}
+                    onClick={() => handleDelete(invoice.id)}
                   >
                     <Icon>delete</Icon>
                   </IconButton>

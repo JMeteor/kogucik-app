@@ -1,5 +1,13 @@
 {
   "ADD_INVOICE": "Add Invoice",
   "INVOICES": "Invoices",
-  "title": "Welcome to react using react-i18next"
+  "TABLE": {
+    "HEADERS": {
+      "INVOICE_NUMBER": "No.",
+      "CREATED": "Created",
+      "VALID_UNTIL": "Valid until",
+      "AMOUNT": "Amount",
+      "ACTIONS": "Status"
+    }
+  }
 }
