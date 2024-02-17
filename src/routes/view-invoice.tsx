@@ -8,6 +8,7 @@ import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InvoiceSchema from '../types/Invoice.ts';
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function ViewInvoice() {
   const { handleSubmit, register, control } = useForm({
@@ -20,10 +21,15 @@ export default function ViewInvoice() {
     console.log('Saving invoice...', data);
   };
 
+  const navigate = useNavigate();
+  const { id: invoiceId } = useParams();
+
   const handleEdit = () => {
     if (isEditMode) {
       console.log('Canceling edit...');
+      navigate(`/invoice/${invoiceId}`);
     } else {
+      navigate(`/invoice/${invoiceId}/edit`);
       console.log('Editing invoice...');
     }
     setIsEditMode((prevState) => !prevState);

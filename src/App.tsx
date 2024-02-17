@@ -30,11 +30,11 @@ const router = createBrowserRouter([
         element: <AddInvoice />,
       },
       {
-        path: '/invoices/:id',
+        path: '/invoice/:id',
         element: <ViewInvoice />,
       },
       {
-        path: '/invoices/:id/edit',
+        path: '/invoice/:id/edit',
         element: <ViewInvoice />,
       },
     ],

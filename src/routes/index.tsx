@@ -84,7 +84,11 @@ function Index() {
                 key={row.invoiceNumber}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell align="left">{row.invoiceNumber}</TableCell>
+                <TableCell align="left">
+                  <Link to={`/invoice/${row.invoiceNumber}`}>
+                    {row.invoiceNumber}
+                  </Link>
+                </TableCell>
                 <TableCell align="right">
                   {formatDateLocale(row.createDate)}
                 </TableCell>
@@ -96,7 +100,7 @@ function Index() {
                   <IconButton
                     aria-label="edit"
                     component={Link}
-                    to={`/invoices/${row.invoiceNumber}/edit`}
+                    to={`/invoice/${row.invoiceNumber}/edit`}
                   >
                     <Icon>edit</Icon>
                   </IconButton>

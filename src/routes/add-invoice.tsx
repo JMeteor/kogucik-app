@@ -79,11 +79,19 @@ export default function AddInvoice() {
           </Grid>
 
           <Grid item sm={6}>
-            <BillingForm name={'recipient'} register={register} />
+            <BillingForm
+              name={'recipient'}
+              register={register}
+              isEditMode={true}
+            />
           </Grid>
 
           <Grid item sm={6}>
-            <BillingForm name={'sender'} register={register} />
+            <BillingForm
+              name={'sender'}
+              register={register}
+              isEditMode={true}
+            />
           </Grid>
         </Grid>
 
