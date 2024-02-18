@@ -31,6 +31,7 @@ export function OrderLinesForm({
       </legend>
       {fields.map((field, index) => (
         <OrderLinesRow
+          isEditMode={isEditMode}
           key={field.id}
           index={index}
           register={register}

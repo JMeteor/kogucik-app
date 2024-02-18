@@ -1,13 +1,22 @@
 import { Box, Icon, IconButton, TextField } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 interface OrderLinesRowProps {
   register: ReturnType<typeof useForm>['register'];
   remove: (index: number) => void;
   index: number;
+  isEditMode?: boolean;
 }
 
-export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
+export function OrderLinesRow({
+  register,
+  remove,
+  index,
+  isEditMode,
+}: OrderLinesRowProps) {
+  const { t } = useTranslation();
+
   return (
     <Box
       sx={{
@@ -21,6 +30,7 @@ export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
       <Box sx={{ flexGrow: 11, flexBasis: 0 }}>
         <TextField
           {...register(`items.${index}.name`)}
+          disabled={!isEditMode}
           defaultValue=""
           label="Name"
           variant="standard"
@@ -30,6 +40,7 @@ export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
           {...register(`items.${index}.quantity`)}
+          disabled={!isEditMode}
           defaultValue=""
           label="Amount"
           variant="standard"
@@ -39,6 +50,7 @@ export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
           {...register(`items.${index}.unit`)}
+          disabled={!isEditMode}
           defaultValue=""
           label="Unit"
           variant="standard"
@@ -48,6 +60,7 @@ export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
           {...register(`items.${index}.tax`)}
+          disabled={!isEditMode}
           defaultValue=""
           label="Tax"
           variant="standard"
@@ -57,6 +70,7 @@ export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
           {...register(`items.${index}.price`)}
+          disabled={!isEditMode}
           defaultValue=""
           label="Price"
           variant="standard"
@@ -64,7 +78,11 @@ export function OrderLinesRow({ register, remove, index }: OrderLinesRowProps) {
         />
       </Box>
       <Box sx={{ flexGrow: 1, flexBasis: 0 }}>
-        <IconButton aria-label="delete" onClick={() => remove(index)}>
+        <IconButton
+          aria-label={t('LABELS.DELETE')}
+          onClick={() => remove(index)}
+          disabled={!isEditMode}
+        >
           <Icon>delete</Icon>
         </IconButton>
       </Box>
