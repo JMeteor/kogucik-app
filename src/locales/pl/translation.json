@@ -1,6 +1,27 @@
 {
   "ADD_INVOICE": "Dodaj fakturę",
   "INVOICES": "Faktury",
+  "INVOICE": {
+    "TITLE": "Faktura",
+    "NUMBER": "Numer faktury",
+    "CREATED": "Data wystawienia",
+    "VALID_UNTIL": "Data ważności",
+    "AMOUNT": "Kwota",
+    "STATUS": "Status",
+    "RECIPIENT": "Odbiorca",
+    "SENDER": "Wystawca"
+  },
+  "CONTACT_FORM": {
+    "TITLE": "Kontakt",
+    "COMPANY_NAME": "Nazwa firmy",
+    "CITY": "Miasto",
+    "STREET": "Ulica",
+    "POSTCODE": "Kod pocztowy",
+    "NIP": "NIP",
+    "PHONE": "Telefon",
+    "EMAIL": "Email",
+    "BANK_ACCOUNT": "Konto bankowe"
+  },
   "TABLE": {
     "HEADERS": {
       "INVOICE_NUMBER": "Nr.",
@@ -9,5 +30,13 @@
       "AMOUNT": "Kwota",
       "ACTIONS": "Akcje"
     }
+  },
+  "LABELS": {
+    "CLOSE": "Zamknij",
+    "DISCARD": "Odrzuć",
+    "SAVE": "Zapisz",
+    "DELETE": "Usuń",
+    "EDIT": "Edytuj",
+    "CANCEL": "Anuluj"
   }
 }

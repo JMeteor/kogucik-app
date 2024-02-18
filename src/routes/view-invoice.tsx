@@ -7,29 +7,64 @@ import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
 import InvoiceSchema from '../types/Invoice.ts';
-import { useState } from 'react';
+import InvoicesService from '../services/invoices/invoicesService.ts';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 export default function ViewInvoice() {
-  const { handleSubmit, register, control } = useForm({
+  const { t } = useTranslation();
+  const { id } = useParams<{ id: string }>();
+  const { handleSubmit, register, control, setValue } = useForm({
     resolver: zodResolver(InvoiceSchema),
   });
-
+  const navigate = useNavigate();
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const onSubmit = (data: any) => {
-    console.log('Saving invoice...', data);
+  if (!id) {
+    throw new Error('Invoice id is not defined');
+  }
+
+  const { data: invoice, refetch } = useQuery(
+    ['invoice', id],
+    () => InvoicesService.fetchInvoiceById(id),
+    { enabled: false },
+  );
+
+  useEffect(() => {
+    refetch();
+  }, [id, refetch]);
+
+  useEffect(() => {
+    if (invoice) {
+      setValue('invoiceNumber', invoice.id);
+      setValue('createDate', dayjs(invoice.createdAt));
+      setValue('dueDate', dayjs(invoice.validUntil));
+      setValue('recipient', invoice.recipient);
+      setValue('sender', invoice.sender);
+      setValue('items', invoice.items);
+    }
+  }, [invoice, setValue]);
+
+  const onSubmit = async (data: any) => {
+    console.log('Sending new data...', data);
+    if (!isEditMode || !id) return;
+    await InvoicesService.updateInvoice(id, data);
   };
 
-  const navigate = useNavigate();
-  const { id: invoiceId } = useParams();
+  const handleSave = () => {
+    console.log('Saving invoice...');
+    handleSubmit(onSubmit);
+  };
 
   const handleEdit = () => {
     if (isEditMode) {
       console.log('Canceling edit...');
-      navigate(`/invoice/${invoiceId}`);
+      navigate(`/invoice/${id}`);
     } else {
-      navigate(`/invoice/${invoiceId}/edit`);
+      navigate(`/invoice/${id}/edit`);
       console.log('Editing invoice...');
     }
     setIsEditMode((prevState) => !prevState);
@@ -38,16 +73,16 @@ export default function ViewInvoice() {
   return (
     <div>
       <Box sx={{ m: 4 }}>
-        <h1 style={visuallyHidden}>Invoice</h1>
+        <h1 style={visuallyHidden}>{t('INVOICE.TITLE')}</h1>
       </Box>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <Grid container spacing={6}>
           <Grid item sm={6}>
             <StyledFieldset>
               <TextField
                 {...register('invoiceNumber')}
-                label="Invoice number"
+                label={t('INVOICE.NUMBER')}
                 variant="standard"
                 disabled
               />
@@ -55,21 +90,23 @@ export default function ViewInvoice() {
               <Grid container spacing={4} sx={{ mt: 2 }}>
                 <Grid item xs={12} sm={6}>
                   <Controller
+                    disabled={!isEditMode}
                     name="createDate"
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
-                      <DatePicker {...field} label={'Create date'} />
+                      <DatePicker {...field} label={t('INVOICE.CREATED')} />
                     )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Controller
+                    disabled={!isEditMode}
                     name="dueDate"
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
-                      <DatePicker {...field} label={'Valid until date'} />
+                      <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
                     )}
                   />
                 </Grid>
@@ -83,26 +120,31 @@ export default function ViewInvoice() {
               flexDirection="row-reverse"
               gap={1}
             >
-              <Button color="secondary" variant="contained" type="submit">
+              <Button
+                disabled={!isEditMode}
+                color="secondary"
+                variant="contained"
+                onClick={handleSave}
+              >
                 <Box display="flex">
                   <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>Save</span>
+                  <span>{t('LABELS.SAVE')}</span>
                 </Box>
               </Button>
               <Button
                 color={isEditMode ? 'error' : 'secondary'}
                 variant="contained"
-                onClick={() => handleEdit()}
+                onClick={handleEdit}
               >
                 {isEditMode ? (
                   <>
                     <Icon sx={{ mr: 1 }}>close</Icon>
-                    Discard
+                    {t('LABELS.DISCARD')}
                   </>
                 ) : (
                   <>
                     <Icon sx={{ mr: 1 }}>edit</Icon>
-                    Edit
+                    {t('LABELS.EDIT')}
                   </>
                 )}
               </Button>

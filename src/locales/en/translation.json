@@ -1,6 +1,27 @@
 {
   "ADD_INVOICE": "Add Invoice",
   "INVOICES": "Invoices",
+  "INVOICE": {
+    "TITLE": "Invoice",
+    "NUMBER": "Invoice number",
+    "CREATED": "Created",
+    "VALID_UNTIL": "Valid until",
+    "AMOUNT": "Amount",
+    "STATUS": "Status",
+    "RECIPIENT": "Recipient",
+    "SENDER": "Sender"
+  },
+  "CONTACT_FORM": {
+    "TITLE": "Contact",
+    "COMPANY_NAME": "Company name",
+    "CITY": "City",
+    "STREET": "Street",
+    "POSTCODE": "Postcode",
+    "NIP": "NIP",
+    "PHONE": "Phone",
+    "EMAIL": "Email",
+    "BANK_ACCOUNT": "Bank account"
+  },
   "TABLE": {
     "HEADERS": {
       "INVOICE_NUMBER": "No.",
@@ -9,5 +30,13 @@
       "AMOUNT": "Amount",
       "ACTIONS": "Status"
     }
+  },
+  "LABELS": {
+    "CLOSE": "Close",
+    "DISCARD": "Discard",
+    "SAVE": "Save",
+    "DELETE": "Delete",
+    "EDIT": "Edit",
+    "CANCEL": "Cancel"
   }
 }

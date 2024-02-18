@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 const StyledFieldset = styled.fieldset`
   border: none;
@@ -15,16 +16,20 @@ interface BillingFormProps {
 }
 
 export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
+  const { t } = useTranslation();
+
   return (
     <StyledFieldset>
       <legend>
-        <Typography variant="h4">{name.toUpperCase()}</Typography>
+        <Typography variant="h4">
+          {t(`INVOICE.${name.toUpperCase()}`)}
+        </Typography>
       </legend>
 
       <TextField
         {...register(`${name}.companyName`)}
         disabled={!isEditMode}
-        label="Company name"
+        label={t('CONTACT_FORM.COMPANY_NAME')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -33,7 +38,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.city`)}
         disabled={!isEditMode}
-        label="City"
+        label={t('CONTACT_FORM.CITY')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -42,7 +47,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.street`)}
         disabled={!isEditMode}
-        label="Street"
+        label={t('CONTACT_FORM.STREET')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -51,7 +56,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.postcode`)}
         disabled={!isEditMode}
-        label="Postcode"
+        label={t('CONTACT_FORM.POSTCODE')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -60,7 +65,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.nip`)}
         disabled={!isEditMode}
-        label="NIP"
+        label={t('CONTACT_FORM.NIP')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -69,7 +74,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.phone`)}
         disabled={!isEditMode}
-        label="Phone"
+        label={t('CONTACT_FORM.PHONE')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -78,7 +83,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.email`)}
         disabled={!isEditMode}
-        label="E-mail"
+        label={t('CONTACT_FORM.EMAIL')}
         variant="standard"
         fullWidth
         sx={{ mb: 1 }}
@@ -87,7 +92,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
       <TextField
         {...register(`${name}.bankAccount`)}
         disabled={!isEditMode}
-        label="Bank account"
+        label={t('CONTACT_FORM.BANK_ACCOUNT')}
         variant="standard"
         fullWidth
       />

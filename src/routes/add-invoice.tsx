@@ -8,8 +8,10 @@ import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { StyledFieldset } from '../components/StyledFieldset.tsx';
 import InvoiceSchema from '../types/Invoice.ts';
+import { useTranslation } from 'react-i18next';
 
 export default function AddInvoice() {
+  const { t } = useTranslation();
   const { handleSubmit, register, control } = useForm({
     resolver: zodResolver(InvoiceSchema),
   });
@@ -30,7 +32,7 @@ export default function AddInvoice() {
             <StyledFieldset>
               <TextField
                 {...register('invoiceNumber')}
-                label="Invoice number"
+                label={t('INVOICE.NUMBER')}
                 variant="standard"
                 fullWidth
               />
@@ -42,7 +44,7 @@ export default function AddInvoice() {
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
-                      <DatePicker {...field} label={'Create date'} />
+                      <DatePicker {...field} label={t('INVOICE.CREATED')} />
                     )}
                   />
                 </Grid>
@@ -52,7 +54,7 @@ export default function AddInvoice() {
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
-                      <DatePicker {...field} label={'Valid until date'} />
+                      <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
                     )}
                   />
                 </Grid>
@@ -69,11 +71,11 @@ export default function AddInvoice() {
               <Button color="secondary" variant="contained" type="submit">
                 <Box display="flex">
                   <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>Save</span>
+                  <span>{t('LABELS.SAVE')}</span>
                 </Box>
               </Button>
               <Button color="secondary" variant="contained">
-                Cancel
+                <span>{t('LABELS.CANCEL')}</span>
               </Button>
             </Box>
           </Grid>

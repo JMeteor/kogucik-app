@@ -1,4 +1,9 @@
-import { CreateInvoiceDto, GetAllInvoicesDto, UpdateInvoiceDto } from './types';
+import {
+  CreateInvoiceDto,
+  GetAllInvoicesDto,
+  GetInvoiceDto,
+  UpdateInvoiceDto,
+} from './types';
 
 class InvoicesService {
   private static readonly BASE_URL = 'http://localhost:4000/api/invoices';
@@ -11,7 +16,7 @@ class InvoicesService {
     return response.json();
   };
 
-  fetchInvoiceById = async (id: string): Promise<GetAllInvoicesDto> => {
+  fetchInvoiceById = async (id: string): Promise<GetInvoiceDto> => {
     const response = await fetch(`${InvoicesService.BASE_URL}/${id}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');

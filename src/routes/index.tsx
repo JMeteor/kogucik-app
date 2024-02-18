@@ -39,8 +39,11 @@ function Index() {
     setOpen(false);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
+    if (deleteId === null) return;
+
     console.log('Deleting invoice...', deleteId);
+    await InvoicesService.deleteInvoice(deleteId);
     setOpen(false);
   };
 
