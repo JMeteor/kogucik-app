@@ -32,17 +32,17 @@ export function OrderLinesRow({
           {...register(`items.${index}.name`)}
           disabled={!isEditMode}
           defaultValue=""
-          label="Name"
+          label={t('ORDER_LINE.NAME')}
           variant="standard"
           fullWidth
         />
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.quantity`)}
+          {...register(`items.${index}.amount`)}
           disabled={!isEditMode}
           defaultValue=""
-          label="Amount"
+          label={t('ORDER_LINE.AMOUNT')}
           variant="standard"
           fullWidth
         />
@@ -52,7 +52,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.unit`)}
           disabled={!isEditMode}
           defaultValue=""
-          label="Unit"
+          label={t('ORDER_LINE.UNIT')}
           variant="standard"
           fullWidth
         />
@@ -72,7 +72,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.price`)}
           disabled={!isEditMode}
           defaultValue=""
-          label="Price"
+          label={t('ORDER_LINE.PRICE')}
           variant="standard"
           fullWidth
         />

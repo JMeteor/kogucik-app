@@ -11,6 +11,13 @@
     "RECIPIENT": "Recipient",
     "SENDER": "Sender"
   },
+  "ORDER_LINE": {
+    "NAME": "Name",
+    "AMOUNT": "Amount",
+    "UNIT": "Unit",
+    "TAX": "Tax",
+    "PRICE": "Price"
+  },
   "CONTACT_FORM": {
     "TITLE": "Contact",
     "COMPANY_NAME": "Company name",

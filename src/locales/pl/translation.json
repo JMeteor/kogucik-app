@@ -11,6 +11,13 @@
     "RECIPIENT": "Odbiorca",
     "SENDER": "Wystawca"
   },
+  "ORDER_LINE": {
+    "NAME": "Nazwa",
+    "AMOUNT": "Ilość",
+    "UNIT": "Jednostka",
+    "TAX": "Podatek",
+    "PRICE": "Cena"
+  },
   "CONTACT_FORM": {
     "TITLE": "Kontakt",
     "COMPANY_NAME": "Nazwa firmy",
