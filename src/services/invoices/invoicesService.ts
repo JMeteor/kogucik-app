@@ -13,7 +13,7 @@ class InvoicesService {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return await response.json();
   };
 
   fetchInvoiceById = async (id: string): Promise<GetInvoiceDto> => {
@@ -21,7 +21,7 @@ class InvoicesService {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return await response.json();
   };
 
   createInvoice = async (invoice: CreateInvoiceDto): Promise<void> => {
@@ -35,7 +35,7 @@ class InvoicesService {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return await response.json();
   };
 
   updateInvoice = async (
@@ -52,7 +52,7 @@ class InvoicesService {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return response.json();
+    return await response.json();
   };
 
   deleteInvoice = async (id: string): Promise<void> => {

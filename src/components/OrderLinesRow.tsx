@@ -44,6 +44,7 @@ export function OrderLinesRow({
           defaultValue=""
           label={t('ORDER_LINE.AMOUNT')}
           variant="standard"
+          required
           fullWidth
         />
       </Box>
@@ -54,6 +55,7 @@ export function OrderLinesRow({
           defaultValue=""
           label={t('ORDER_LINE.UNIT')}
           variant="standard"
+          required
           fullWidth
         />
       </Box>
@@ -62,8 +64,9 @@ export function OrderLinesRow({
           {...register(`items.${index}.tax`)}
           disabled={!isEditMode}
           defaultValue=""
-          label="Tax"
+          label={t('ORDER_LINE.TAX')}
           variant="standard"
+          required
           fullWidth
         />
       </Box>
@@ -74,6 +77,7 @@ export function OrderLinesRow({
           defaultValue=""
           label={t('ORDER_LINE.PRICE')}
           variant="standard"
+          required
           fullWidth
         />
       </Box>

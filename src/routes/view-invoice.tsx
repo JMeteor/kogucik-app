@@ -21,6 +21,8 @@ export default function ViewInvoice() {
     resolver: zodResolver(InvoiceSchema),
   });
   const navigate = useNavigate();
+
+  const [status, setStatus] = useState('idle');
   const [isEditMode, setIsEditMode] = useState(false);
 
   if (!id) {
@@ -51,12 +53,21 @@ export default function ViewInvoice() {
   const onSubmit = async (data: any) => {
     console.log('Sending new data...', data);
     if (!isEditMode || !id) return;
-    await InvoicesService.updateInvoice(id, data);
+
+    setStatus('loading');
+
+    try {
+      await InvoicesService.updateInvoice(id, data);
+      setStatus('success');
+    } catch (error) {
+      console.log('error');
+      setStatus('error');
+    }
   };
 
   const handleSave = () => {
     console.log('Saving invoice...');
-    handleSubmit(onSubmit);
+    handleSubmit(onSubmit); // WHY NO WORK ?!?!
   };
 
   const handleEdit = () => {
@@ -128,7 +139,11 @@ export default function ViewInvoice() {
               >
                 <Box display="flex">
                   <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>{t('LABELS.SAVE')}</span>
+                  <span>
+                    {status === 'loading'
+                      ? t('LABELS.SAVING')
+                      : t('LABELS.SAVE')}
+                  </span>
                 </Box>
               </Button>
               <Button

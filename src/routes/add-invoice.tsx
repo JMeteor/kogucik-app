@@ -1,7 +1,15 @@
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { Box, Button, Grid, Icon, TextField } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Grid,
+  Icon,
+  TextField,
+} from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { DatePicker } from '@mui/x-date-pickers';
 import { BillingForm } from '../components/BillingForm.tsx';
@@ -9,6 +17,9 @@ import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { StyledFieldset } from '../components/StyledFieldset.tsx';
 import InvoiceSchema from '../types/Invoice.ts';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import InvoicesService from '../services/invoices/invoicesService.ts';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddInvoice() {
   const { t } = useTranslation();
@@ -16,14 +27,32 @@ export default function AddInvoice() {
     resolver: zodResolver(InvoiceSchema),
   });
 
-  const onSubmit = (data: any) => {
+  // idle, loading, success, error
+  const [status, setStatus] = useState('idle');
+
+  const onSubmit = async (data: any) => {
+    setStatus('loading');
     console.log('Saving invoice...', data);
+
+    try {
+      await InvoicesService.createInvoice(data);
+      setStatus('success');
+    } catch (error) {
+      console.log(error);
+      setStatus('error');
+    }
+  };
+
+  const navigate = useNavigate();
+
+  const handleCancel = () => {
+    navigate('/');
   };
 
   return (
     <div>
       <Box sx={{ m: 4 }}>
-        <h1 style={visuallyHidden}>Add new invoice</h1>
+        <h1 style={visuallyHidden}>{t('ADD_INVOICE')}</h1>
       </Box>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -34,13 +63,14 @@ export default function AddInvoice() {
                 {...register('invoiceNumber')}
                 label={t('INVOICE.NUMBER')}
                 variant="standard"
+                required
                 fullWidth
               />
 
               <Grid container spacing={4} sx={{ mt: 2 }}>
                 <Grid item xs={12} sm={6}>
                   <Controller
-                    name="createDate"
+                    name="createdAt"
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
@@ -50,12 +80,13 @@ export default function AddInvoice() {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Controller
-                    name="dueDate"
+                    name="validUntil"
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
                       <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
                     )}
+                    rules={{ required: true }}
                   />
                 </Grid>
               </Grid>
@@ -71,13 +102,42 @@ export default function AddInvoice() {
               <Button color="secondary" variant="contained" type="submit">
                 <Box display="flex">
                   <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>{t('LABELS.SAVE')}</span>
+                  <span>
+                    {status === 'loading'
+                      ? t('LABELS.SAVING')
+                      : t('LABELS.SAVE')}
+                  </span>
                 </Box>
               </Button>
-              <Button color="secondary" variant="contained">
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={handleCancel}
+              >
                 <span>{t('LABELS.CANCEL')}</span>
               </Button>
             </Box>
+            <div
+              style={{
+                position: 'absolute',
+                top: '10%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+              }}
+            >
+              {status === 'success' && (
+                <Alert severity="success">
+                  <AlertTitle>Success</AlertTitle>
+                  Invoice saved successfully.
+                </Alert>
+              )}
+              {status === 'error' && (
+                <Alert severity="error">
+                  <AlertTitle>Error</AlertTitle>
+                  Something went wrong.
+                </Alert>
+              )}
+            </div>
           </Grid>
 
           <Grid item sm={6}>
@@ -102,7 +162,11 @@ export default function AddInvoice() {
             mt: 4,
           }}
         >
-          <OrderLinesForm control={control} register={register} />
+          <OrderLinesForm
+            control={control}
+            register={register}
+            isEditMode={true}
+          />
         </Box>
       </form>
     </div>

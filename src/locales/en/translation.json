@@ -42,6 +42,7 @@
     "CLOSE": "Close",
     "DISCARD": "Discard",
     "SAVE": "Save",
+    "SAVING": "Saving",
     "DELETE": "Delete",
     "EDIT": "Edit",
     "CANCEL": "Cancel"

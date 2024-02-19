@@ -42,6 +42,7 @@
     "CLOSE": "Zamknij",
     "DISCARD": "Odrzuć",
     "SAVE": "Zapisz",
+    "SAVING": "Zapisuje...",
     "DELETE": "Usuń",
     "EDIT": "Edytuj",
     "CANCEL": "Anuluj"

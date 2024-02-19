@@ -32,6 +32,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         label={t('CONTACT_FORM.COMPANY_NAME')}
         variant="standard"
         fullWidth
+        required
         sx={{ mb: 1 }}
       />
 
@@ -41,6 +42,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         label={t('CONTACT_FORM.CITY')}
         variant="standard"
         fullWidth
+        required
         sx={{ mb: 1 }}
       />
 
@@ -50,6 +52,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         label={t('CONTACT_FORM.STREET')}
         variant="standard"
         fullWidth
+        required
         sx={{ mb: 1 }}
       />
 
@@ -59,6 +62,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         label={t('CONTACT_FORM.POSTCODE')}
         variant="standard"
         fullWidth
+        required
         sx={{ mb: 1 }}
       />
 
@@ -68,6 +72,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         label={t('CONTACT_FORM.NIP')}
         variant="standard"
         fullWidth
+        required
         sx={{ mb: 1 }}
       />
 
@@ -86,6 +91,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         label={t('CONTACT_FORM.EMAIL')}
         variant="standard"
         fullWidth
+        required
         sx={{ mb: 1 }}
       />
 
@@ -94,6 +100,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         disabled={!isEditMode}
         label={t('CONTACT_FORM.BANK_ACCOUNT')}
         variant="standard"
+        required
         fullWidth
       />
     </StyledFieldset>
