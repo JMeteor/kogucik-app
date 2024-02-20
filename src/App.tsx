@@ -7,7 +7,6 @@ import theme from './theme.ts';
 import Index from './routes';
 
 import AddInvoice from './routes/add-invoice.tsx';
-import ViewInvoice from './routes/view-invoice.tsx';
 import { ThemeProvider } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -15,6 +14,7 @@ import { Suspense } from 'react';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import EditInvoicePage from './routes/edit-invoice.tsx';
 
 const router = createBrowserRouter([
   {
@@ -29,11 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/invoice/:id',
-        element: <ViewInvoice />,
+        element: <EditInvoicePage />,
       },
       {
         path: '/invoice/:id/edit',
-        element: <ViewInvoice />,
+        element: <EditInvoicePage />,
       },
     ],
   },
@@ -57,9 +57,9 @@ const Loader = () => (
   </div>
 );
 
-export default function App() {
-  const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
+export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<Loader />}>

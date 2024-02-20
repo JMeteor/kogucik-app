@@ -24,13 +24,13 @@ class InvoicesService {
     return await response.json();
   };
 
-  createInvoice = async (invoice: CreateInvoiceDto): Promise<void> => {
+  createInvoice = async (data: CreateInvoiceDto): Promise<void> => {
     const response = await fetch(InvoicesService.BASE_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(invoice),
+      body: JSON.stringify(data),
     });
     if (!response.ok) {
       throw new Error('Network response was not ok');
@@ -38,16 +38,13 @@ class InvoicesService {
     return await response.json();
   };
 
-  updateInvoice = async (
-    id: string,
-    invoice: UpdateInvoiceDto,
-  ): Promise<void> => {
+  updateInvoice = async (id: string, data: UpdateInvoiceDto): Promise<void> => {
     const response = await fetch(`${InvoicesService.BASE_URL}/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(invoice),
+      body: JSON.stringify(data),
     });
     if (!response.ok) {
       throw new Error('Network response was not ok');
