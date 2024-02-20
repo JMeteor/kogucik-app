@@ -28,6 +28,7 @@ export default function AddInvoice() {
   });
 
   // idle, loading, success, error
+  // Should be strongly typed in such case. But it's better to use useMutation
   const [status, setStatus] = useState('idle');
 
   const onSubmit = async (data: any) => {

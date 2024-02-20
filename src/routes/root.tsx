@@ -11,7 +11,8 @@ function Root() {
       <header>
         <TopNavigation />
       </header>
-      <div
+        {/* It doesn't make much sense, as you are not using React Router actions / loaders */}
+        <div
         id="detail"
         className={navigation.state === 'loading' ? 'loading' : ''}
       >

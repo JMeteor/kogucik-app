@@ -21,6 +21,7 @@ export function OrderLinesForm({
   });
 
   const handleAddItem = () => {
+    // In schema, you expect these fields to be numbers, but are strings.
     append({ name: '', quantity: '', unit: '', tax: '', price: '' });
   };
 

@@ -9,36 +9,38 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import InvoiceSchema from '../types/Invoice.ts';
 import InvoicesService from '../services/invoices/invoicesService.ts';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
-export default function ViewInvoice() {
+interface ViewInvoiceProps {
+  isEditMode?: boolean;
+}
+
+export default function ViewInvoice({ isEditMode = false }: ViewInvoiceProps) {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const { handleSubmit, register, control, setValue } = useForm({
     resolver: zodResolver(InvoiceSchema),
   });
-  const navigate = useNavigate();
 
   const [status, setStatus] = useState('idle');
-  const [isEditMode, setIsEditMode] = useState(false);
 
+  // This Can be validated on L19 with zod
   if (!id) {
     throw new Error('Invoice id is not defined');
   }
 
-  const { data: invoice, refetch } = useQuery(
-    ['invoice', id],
-    () => InvoicesService.fetchInvoiceById(id),
-    { enabled: false },
+  // Why refetch?
+  const { data: invoice } = useQuery(
+      ['invoice', id],
+      () => InvoicesService.fetchInvoiceById(id)
   );
 
-  useEffect(() => {
-    refetch();
-  }, [id, refetch]);
 
+  // Try to avoid useEffect as much as possible. Separate data fetching component from form component
+  // Then use form in both, add-invoice and edit invoice
   useEffect(() => {
     if (invoice) {
       setValue('invoiceNumber', invoice.id);
@@ -50,6 +52,7 @@ export default function ViewInvoice() {
     }
   }, [invoice, setValue]);
 
+  // useMutation + types
   const onSubmit = async (data: any) => {
     console.log('Sending new data...', data);
     if (!isEditMode || !id) return;
@@ -67,18 +70,9 @@ export default function ViewInvoice() {
 
   const handleSave = () => {
     console.log('Saving invoice...');
+    // export type UseFormHandleSubmit<TFieldValues extends FieldValues, TTransformedValues extends FieldValues | undefined = undefined> = (onValid: TTransformedValues extends undefined ? SubmitHandler<TFieldValues> : TTransformedValues extends FieldValues ? SubmitHandler<TTransformedValues> : never, onInvalid?: SubmitErrorHandler<TFieldValues>) => (e?: React.BaseSyntheticEvent) => Promise<void>;
+    // handleSubmit returns a function
     handleSubmit(onSubmit); // WHY NO WORK ?!?!
-  };
-
-  const handleEdit = () => {
-    if (isEditMode) {
-      console.log('Canceling edit...');
-      navigate(`/invoice/${id}`);
-    } else {
-      navigate(`/invoice/${id}/edit`);
-      console.log('Editing invoice...');
-    }
-    setIsEditMode((prevState) => !prevState);
   };
 
   return (
@@ -131,6 +125,7 @@ export default function ViewInvoice() {
               flexDirection="row-reverse"
               gap={1}
             >
+              {/* Should be handled as form submission */}
               <Button
                 disabled={!isEditMode}
                 color="secondary"
@@ -146,10 +141,9 @@ export default function ViewInvoice() {
                   </span>
                 </Box>
               </Button>
-              <Button
+              <Link
                 color={isEditMode ? 'error' : 'secondary'}
-                variant="contained"
-                onClick={handleEdit}
+                to={isEditMode ? `/invoice/${id}` : `/invoice/${id}/edit`}
               >
                 {isEditMode ? (
                   <>
@@ -162,7 +156,7 @@ export default function ViewInvoice() {
                     {t('LABELS.EDIT')}
                   </>
                 )}
-              </Button>
+              </Link>
             </Box>
           </Grid>
 
