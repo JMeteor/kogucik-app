@@ -47,15 +47,17 @@ function Index() {
     setOpen(false);
   };
 
+  // It can be moved to zod parser
   const totalAmount = (items: GetItemDto[]) => {
     return items.reduce((acc, item) => {
       return acc + item.amount;
     }, 0);
   };
 
+  // Should be parsed with zod
   const { data: invoices } = useQuery(
     'invoices',
-    InvoicesService.fetchAllInvoices,
+    InvoicesService.fetchAllInvoices
   );
 
   return (
@@ -104,6 +106,7 @@ function Index() {
               </TableRow>
             ))}
           </TableBody>
+          {/* Could be placed with its own logic in separate component within DeleteButton */}
           <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogContent>

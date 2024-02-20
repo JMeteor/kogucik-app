@@ -1,3 +1,4 @@
+// This is fine, but can also be done with CSS In JS
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Root />,
+    // It requires additional configuration to work with react-query
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Index /> },
@@ -33,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/invoice/:id/edit',
-        element: <ViewInvoice />,
+        element: <ViewInvoice isEditMode />,
       },
     ],
   },
@@ -57,8 +59,10 @@ const Loader = () => (
   </div>
 );
 
+// Client should be created outside the component
+const queryClient = new QueryClient();
+
 export default function App() {
-  const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>

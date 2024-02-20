@@ -39,9 +39,10 @@ export function OrderLinesRow({
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.amount`)}
+          {...register(`items.${index}.amount`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
+          type='number'
           label={t('ORDER_LINE.AMOUNT')}
           variant="standard"
           required
