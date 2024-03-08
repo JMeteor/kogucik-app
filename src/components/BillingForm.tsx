@@ -13,9 +13,15 @@ interface BillingFormProps {
   isEditMode?: boolean;
   name: string;
   register: ReturnType<typeof useForm>['register'];
+  errors: Record<string, any>;
 }
 
-export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
+export function BillingForm({
+  name,
+  register,
+  isEditMode,
+  errors,
+}: BillingFormProps) {
   const { t } = useTranslation();
 
   return (
@@ -33,6 +39,8 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         variant="standard"
         fullWidth
         required
+        error={Boolean(errors && errors[`${name}.companyName`])}
+        helperText={errors?.[`${name}.companyName`]?.message}
         sx={{ mb: 1 }}
       />
 
@@ -73,6 +81,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         variant="standard"
         fullWidth
         required
+        inputProps={{ pattern: '[0-9]{10}' }}
         sx={{ mb: 1 }}
       />
 
@@ -92,6 +101,7 @@ export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
         variant="standard"
         fullWidth
         required
+        type="email"
         sx={{ mb: 1 }}
       />
 

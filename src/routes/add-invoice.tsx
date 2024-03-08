@@ -19,34 +19,39 @@ import InvoiceSchema from '../types/Invoice.ts';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import InvoicesService from '../services/invoices/invoicesService.ts';
-import { useNavigate } from 'react-router-dom';
+import { generateUniqueId } from '../helpers/generateId.ts';
+import dayjs from 'dayjs';
 
 export default function AddInvoice() {
   const { t } = useTranslation();
-  const { handleSubmit, register, control } = useForm({
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(InvoiceSchema),
   });
 
   // idle, loading, success, error
   const [status, setStatus] = useState('idle');
 
+  console.log(errors);
+
   const onSubmit = async (data: any) => {
+    const id = generateUniqueId();
+    const invoice = { ...data, id };
+
     setStatus('loading');
-    console.log('Saving invoice...', data);
+    console.log('Saving invoice...', invoice);
 
     try {
-      await InvoicesService.createInvoice(data);
+      await InvoicesService.createInvoice(invoice);
       setStatus('success');
     } catch (error) {
       console.log(error);
       setStatus('error');
     }
-  };
-
-  const navigate = useNavigate();
-
-  const handleCancel = () => {
-    navigate('/');
   };
 
   return (
@@ -60,8 +65,8 @@ export default function AddInvoice() {
           <Grid item sm={6}>
             <StyledFieldset>
               <TextField
-                {...register('invoiceNumber')}
-                label={t('INVOICE.NUMBER')}
+                {...register('name')}
+                label={t('INVOICE.NAME')}
                 variant="standard"
                 required
                 fullWidth
@@ -74,7 +79,15 @@ export default function AddInvoice() {
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
-                      <DatePicker {...field} label={t('INVOICE.CREATED')} />
+                      <DatePicker
+                        {...field}
+                        label={t('INVOICE.CREATED')}
+                        onChange={(date: Date | null) => {
+                          field.onChange(
+                            date ? dayjs(date).format('YYYY-MM-DD') : null,
+                          );
+                        }}
+                      />
                     )}
                   />
                 </Grid>
@@ -84,7 +97,15 @@ export default function AddInvoice() {
                     control={control}
                     defaultValue={null}
                     render={({ field }) => (
-                      <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
+                      <DatePicker
+                        {...field}
+                        label={t('INVOICE.VALID_UNTIL')}
+                        onChange={(date: Date | null) => {
+                          field.onChange(
+                            date ? dayjs(date).format('YYYY-MM-DD') : null,
+                          );
+                        }}
+                      />
                     )}
                     rules={{ required: true }}
                   />
@@ -109,11 +130,7 @@ export default function AddInvoice() {
                   </span>
                 </Box>
               </Button>
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={handleCancel}
-              >
+              <Button color="secondary" variant="contained" href="/">
                 <span>{t('LABELS.CANCEL')}</span>
               </Button>
             </Box>
@@ -145,6 +162,7 @@ export default function AddInvoice() {
               name={'recipient'}
               register={register}
               isEditMode={true}
+              errors={errors}
             />
           </Grid>
 
@@ -153,6 +171,7 @@ export default function AddInvoice() {
               name={'sender'}
               register={register}
               isEditMode={true}
+              errors={errors}
             />
           </Grid>
         </Grid>

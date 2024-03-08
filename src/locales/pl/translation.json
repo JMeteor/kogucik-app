@@ -3,7 +3,7 @@
   "INVOICES": "Faktury",
   "INVOICE": {
     "TITLE": "Faktura",
-    "NUMBER": "Numer faktury",
+    "NAME": "Nazwa",
     "CREATED": "Data wystawienia",
     "VALID_UNTIL": "Data ważności",
     "AMOUNT": "Kwota",

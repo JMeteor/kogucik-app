@@ -1,14 +1,15 @@
 import { z } from 'zod';
-import BillingDetails from './BillingDetails';
-import OrderLine from './OrderLine.ts';
+import OrderLineSchema from './OrderLine.ts';
+import BillingDetails from './BillingDetails.ts';
 
 const InvoiceSchema = z.object({
-  invoiceNumber: z.string(),
-  createDate: z.date().nullable(),
-  dueDate: z.date().nullable(),
-  recipient: BillingDetails.nullable(),
-  sender: BillingDetails.nullable(),
-  items: z.array(OrderLine),
+  id: z.string().optional(),
+  recipient: BillingDetails,
+  sender: BillingDetails,
+  items: z.array(OrderLineSchema),
+  name: z.string(),
+  createdAt: z.string(),
+  validUntil: z.string(),
 });
 
 export type Invoice = z.infer<typeof InvoiceSchema>;

@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
 const OrderLineSchema = z.object({
+  id: z.string(),
   name: z.string(),
-  quantity: z.number(),
+  amount: z.number(),
   unit: z.string(),
   tax: z.number(),
   price: z.number(),

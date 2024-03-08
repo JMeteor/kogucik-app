@@ -6,79 +6,57 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
-import InvoiceSchema from '../types/Invoice.ts';
-import InvoicesService from '../services/invoices/invoicesService.ts';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import dayjs from 'dayjs';
+import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
+import { z } from 'zod';
+import InvoiceSchema from '../types/Invoice.ts';
 
-export default function ViewInvoice() {
-  const { t } = useTranslation();
-  const { id } = useParams<{ id: string }>();
-  const { handleSubmit, register, control, setValue } = useForm({
-    resolver: zodResolver(InvoiceSchema),
-  });
-  const navigate = useNavigate();
+interface EditInvoiceProps {
+  defaultValues?: any;
+  isEditMode?: boolean;
+}
 
-  const [status, setStatus] = useState('idle');
-  const [isEditMode, setIsEditMode] = useState(false);
+const EditInvoicePage = (props: EditInvoiceProps) => {
+  const { id } = z.object({ id: z.string() }).parse(useParams());
 
-  if (!id) {
-    throw new Error('Invoice id is not defined');
+  const { data: invoice, status } = useGetInvoice(id);
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
   }
 
-  const { data: invoice, refetch } = useQuery(
-    ['invoice', id],
-    () => InvoicesService.fetchInvoiceById(id),
-    { enabled: false },
-  );
+  if (status === 'error') {
+    return <div>Error...</div>;
+  }
 
-  useEffect(() => {
-    refetch();
-  }, [id, refetch]);
+  return <ViewInvoice defaultValues={invoice} isEditMode={props.isEditMode} />;
+};
 
-  useEffect(() => {
-    if (invoice) {
-      setValue('invoiceNumber', invoice.id);
-      setValue('createDate', dayjs(invoice.createdAt));
-      setValue('dueDate', dayjs(invoice.validUntil));
-      setValue('recipient', invoice.recipient);
-      setValue('sender', invoice.sender);
-      setValue('items', invoice.items);
-    }
-  }, [invoice, setValue]);
+function ViewInvoice({ defaultValues, isEditMode }: EditInvoiceProps) {
+  const { t } = useTranslation();
+  const { id } = useParams<{ id: string }>();
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(InvoiceSchema),
+    defaultValues,
+  });
+
+  const updateInvoiceMutation = useUpdateInvoice();
 
   const onSubmit = async (data: any) => {
     console.log('Sending new data...', data);
     if (!isEditMode || !id) return;
 
-    setStatus('loading');
-
     try {
-      await InvoicesService.updateInvoice(id, data);
-      setStatus('success');
+      await updateInvoiceMutation.mutateAsync({ id, data });
     } catch (error) {
       console.log('error');
-      setStatus('error');
     }
-  };
-
-  const handleSave = () => {
-    console.log('Saving invoice...');
-    handleSubmit(onSubmit); // WHY NO WORK ?!?!
-  };
-
-  const handleEdit = () => {
-    if (isEditMode) {
-      console.log('Canceling edit...');
-      navigate(`/invoice/${id}`);
-    } else {
-      navigate(`/invoice/${id}/edit`);
-      console.log('Editing invoice...');
-    }
-    setIsEditMode((prevState) => !prevState);
   };
 
   return (
@@ -87,15 +65,17 @@ export default function ViewInvoice() {
         <h1 style={visuallyHidden}>{t('INVOICE.TITLE')}</h1>
       </Box>
 
-      <form>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={6}>
           <Grid item sm={6}>
             <StyledFieldset>
               <TextField
-                {...register('invoiceNumber')}
-                label={t('INVOICE.NUMBER')}
+                {...register('name')}
+                disabled={!isEditMode}
+                label={t('INVOICE.NAME')}
                 variant="standard"
-                disabled
+                required
+                fullWidth
               />
 
               <Grid container spacing={4} sx={{ mt: 2 }}>
@@ -131,25 +111,22 @@ export default function ViewInvoice() {
               flexDirection="row-reverse"
               gap={1}
             >
+              {isEditMode && (
+                <Button color="secondary" variant="contained" type="submit">
+                  <Box display="flex">
+                    <Icon sx={{ mr: 1 }}>save</Icon>
+                    <span>
+                      {updateInvoiceMutation.isLoading
+                        ? t('LABELS.SAVING')
+                        : t('LABELS.SAVE')}
+                    </span>
+                  </Box>
+                </Button>
+              )}
               <Button
-                disabled={!isEditMode}
-                color="secondary"
                 variant="contained"
-                onClick={handleSave}
-              >
-                <Box display="flex">
-                  <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>
-                    {status === 'loading'
-                      ? t('LABELS.SAVING')
-                      : t('LABELS.SAVE')}
-                  </span>
-                </Box>
-              </Button>
-              <Button
                 color={isEditMode ? 'error' : 'secondary'}
-                variant="contained"
-                onClick={handleEdit}
+                href={isEditMode ? `/invoice/${id}` : `/invoice/${id}/edit`}
               >
                 {isEditMode ? (
                   <>
@@ -171,6 +148,7 @@ export default function ViewInvoice() {
               name={'recipient'}
               register={register}
               isEditMode={isEditMode}
+              errors={errors}
             />
           </Grid>
 
@@ -179,6 +157,7 @@ export default function ViewInvoice() {
               name={'sender'}
               register={register}
               isEditMode={isEditMode}
+              errors={errors}
             />
           </Grid>
         </Grid>
@@ -198,3 +177,5 @@ export default function ViewInvoice() {
     </div>
   );
 }
+
+export default EditInvoicePage;

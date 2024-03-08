@@ -3,7 +3,7 @@
   "INVOICES": "Invoices",
   "INVOICE": {
     "TITLE": "Invoice",
-    "NUMBER": "Invoice number",
+    "NAME": "Name",
     "CREATED": "Created",
     "VALID_UNTIL": "Valid until",
     "AMOUNT": "Amount",
