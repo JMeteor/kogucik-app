@@ -6,34 +6,21 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { Link, useMatch, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
 import { z } from 'zod';
 import InvoiceSchema from '../types/Invoice.ts';
 
-interface ViewInvoiceProps {
+interface EditInvoiceProps {
   defaultValues?: any;
   isEditMode?: boolean;
 }
 
-const useIsEditMode = () => {
-  const match = useMatch('/invoice/:id/edit');
-  return Boolean(match);
-};
-
-const EditInvoicePage = () => {
-  const isEditMode = useIsEditMode();
-  const { id } = z
-    .object({ id: z.string() })
-    .parse(useParams<{ id: string }>());
+const EditInvoicePage = (props: EditInvoiceProps) => {
+  const { id } = z.object({ id: z.string() }).parse(useParams());
 
   const { data: invoice, status } = useGetInvoice(id);
-
-  if (!id) {
-    throw new Error('Invoice id is not defined');
-  }
 
   if (status === 'loading') {
     return <div>Loading...</div>;
@@ -43,10 +30,10 @@ const EditInvoicePage = () => {
     return <div>Error...</div>;
   }
 
-  return <ViewInvoice defaultValues={invoice} isEditMode={isEditMode} />;
+  return <ViewInvoice defaultValues={invoice} isEditMode={props.isEditMode} />;
 };
 
-function ViewInvoice({ defaultValues, isEditMode = false }: ViewInvoiceProps) {
+function ViewInvoice({ defaultValues, isEditMode }: EditInvoiceProps) {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const {
@@ -59,21 +46,16 @@ function ViewInvoice({ defaultValues, isEditMode = false }: ViewInvoiceProps) {
     defaultValues,
   });
 
-  const [status, setStatus] = useState('idle');
   const updateInvoiceMutation = useUpdateInvoice();
 
   const onSubmit = async (data: any) => {
     console.log('Sending new data...', data);
     if (!isEditMode || !id) return;
 
-    setStatus('loading');
-
     try {
       await updateInvoiceMutation.mutateAsync({ id, data });
-      setStatus('success');
     } catch (error) {
       console.log('error');
-      setStatus('error');
     }
   };
 
@@ -83,7 +65,7 @@ function ViewInvoice({ defaultValues, isEditMode = false }: ViewInvoiceProps) {
         <h1 style={visuallyHidden}>{t('INVOICE.TITLE')}</h1>
       </Box>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={6}>
           <Grid item sm={6}>
             <StyledFieldset>
@@ -129,37 +111,34 @@ function ViewInvoice({ defaultValues, isEditMode = false }: ViewInvoiceProps) {
               flexDirection="row-reverse"
               gap={1}
             >
+              {isEditMode && (
+                <Button color="secondary" variant="contained" type="submit">
+                  <Box display="flex">
+                    <Icon sx={{ mr: 1 }}>save</Icon>
+                    <span>
+                      {updateInvoiceMutation.isLoading
+                        ? t('LABELS.SAVING')
+                        : t('LABELS.SAVE')}
+                    </span>
+                  </Box>
+                </Button>
+              )}
               <Button
-                disabled={!isEditMode}
-                color="secondary"
                 variant="contained"
-                type="submit"
+                color={isEditMode ? 'error' : 'secondary'}
+                href={isEditMode ? `/invoice/${id}` : `/invoice/${id}/edit`}
               >
-                <Box display="flex">
-                  <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>
-                    {status === 'loading'
-                      ? t('LABELS.SAVING')
-                      : t('LABELS.SAVE')}
-                  </span>
-                </Box>
-              </Button>
-              <Button color={isEditMode ? 'error' : 'secondary'}>
-                <Link
-                  to={isEditMode ? `/invoice/${id}` : `/invoice/${id}/edit`}
-                >
-                  {isEditMode ? (
-                    <>
-                      <Icon sx={{ mr: 1 }}>close</Icon>
-                      {t('LABELS.DISCARD')}
-                    </>
-                  ) : (
-                    <>
-                      <Icon sx={{ mr: 1 }}>edit</Icon>
-                      {t('LABELS.EDIT')}
-                    </>
-                  )}
-                </Link>
+                {isEditMode ? (
+                  <>
+                    <Icon sx={{ mr: 1 }}>close</Icon>
+                    {t('LABELS.DISCARD')}
+                  </>
+                ) : (
+                  <>
+                    <Icon sx={{ mr: 1 }}>edit</Icon>
+                    {t('LABELS.EDIT')}
+                  </>
+                )}
               </Button>
             </Box>
           </Grid>

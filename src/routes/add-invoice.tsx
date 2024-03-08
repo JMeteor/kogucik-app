@@ -19,7 +19,6 @@ import InvoiceSchema from '../types/Invoice.ts';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import InvoicesService from '../services/invoices/invoicesService.ts';
-import { useNavigate } from 'react-router-dom';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import dayjs from 'dayjs';
 
@@ -33,7 +32,6 @@ export default function AddInvoice() {
   } = useForm({
     resolver: zodResolver(InvoiceSchema),
   });
-  const navigate = useNavigate();
 
   // idle, loading, success, error
   const [status, setStatus] = useState('idle');
@@ -132,11 +130,7 @@ export default function AddInvoice() {
                   </span>
                 </Box>
               </Button>
-              <Button
-                color="secondary"
-                variant="contained"
-                onClick={() => navigate('/')}
-              >
+              <Button color="secondary" variant="contained" href="/">
                 <span>{t('LABELS.CANCEL')}</span>
               </Button>
             </Box>

@@ -29,11 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/invoice/:id',
-        element: <EditInvoicePage />,
+        element: <EditInvoicePage isEditMode={false} />,
       },
       {
         path: '/invoice/:id/edit',
-        element: <EditInvoicePage />,
+        element: <EditInvoicePage isEditMode={true} />,
       },
     ],
   },
