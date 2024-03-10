@@ -38,7 +38,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.COMPANY_NAME')}
         variant="standard"
         fullWidth
-        required
         error={Boolean(errors && errors[`${name}.companyName`])}
         helperText={errors?.[`${name}.companyName`]?.message}
         sx={{ mb: 1 }}
@@ -50,7 +49,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.CITY')}
         variant="standard"
         fullWidth
-        required
         sx={{ mb: 1 }}
       />
 
@@ -60,7 +58,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.STREET')}
         variant="standard"
         fullWidth
-        required
         sx={{ mb: 1 }}
       />
 
@@ -70,7 +67,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.POSTCODE')}
         variant="standard"
         fullWidth
-        required
         sx={{ mb: 1 }}
       />
 
@@ -80,7 +76,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.NIP')}
         variant="standard"
         fullWidth
-        required
         inputProps={{ pattern: '[0-9]{10}' }}
         sx={{ mb: 1 }}
       />
@@ -100,7 +95,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.EMAIL')}
         variant="standard"
         fullWidth
-        required
         type="email"
         sx={{ mb: 1 }}
       />
@@ -110,7 +104,6 @@ export function BillingForm({
         disabled={!isEditMode}
         label={t('CONTACT_FORM.BANK_ACCOUNT')}
         variant="standard"
-        required
         fullWidth
       />
     </StyledFieldset>

@@ -31,6 +31,7 @@ export default function AddInvoicePage() {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(InvoiceSchema),
+    mode: 'onChange',
   });
 
   // idle, loading, success, error
@@ -40,7 +41,12 @@ export default function AddInvoicePage() {
 
   const onSubmit = async (data: any) => {
     const id = generateUniqueId();
-    const invoice = { ...data, id };
+    const invoice = {
+      ...data,
+      id,
+      createdAt: dayjs(data.createdAt).toISOString(),
+      validUntil: dayjs(data.createdAt).toISOString(),
+    };
 
     setStatus('loading');
     console.log('Saving invoice...', invoice);
@@ -53,6 +59,8 @@ export default function AddInvoicePage() {
       setStatus('error');
     }
   };
+
+  const todayDate = dayjs(new Date());
 
   return (
     <div>
@@ -70,45 +78,52 @@ export default function AddInvoicePage() {
                 variant="standard"
                 required
                 fullWidth
+                error={!!errors.name}
+                helperText={errors.name && 'This field is required'}
               />
 
               <Grid container spacing={4} sx={{ mt: 2 }}>
                 <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="createdAt"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label={t('INVOICE.CREATED')}
-                        onChange={(date: Date | null) => {
-                          field.onChange(
-                            date ? dayjs(date).format('YYYY-MM-DD') : null,
-                          );
-                        }}
-                      />
-                    )}
-                  />
+                  <Box display="flex" flexDirection="column">
+                    <Controller
+                      name="createdAt"
+                      control={control}
+                      defaultValue={todayDate}
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          format={'DD/MM/YYYY'}
+                          label={t('INVOICE.CREATED')}
+                          onChange={(date: Date | null) => {
+                            field.onChange(date ? dayjs(date).toDate() : null);
+                          }}
+                          sx={{ mb: 1 }}
+                        />
+                      )}
+                    />
+                  </Box>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="validUntil"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label={t('INVOICE.VALID_UNTIL')}
-                        onChange={(date: Date | null) => {
-                          field.onChange(
-                            date ? dayjs(date).format('YYYY-MM-DD') : null,
-                          );
-                        }}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
+                  <Box display="flex" flexDirection="column">
+                    <Controller
+                      name="validUntil"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <DatePicker
+                          {...field}
+                          format={'DD/MM/YYYY'}
+                          label={t('INVOICE.VALID_UNTIL')}
+                          onChange={(date: Date | null) => {
+                            field.onChange(date ? dayjs(date).toDate() : null);
+                          }}
+                          sx={{ mb: 1 }}
+                        />
+                      )}
+                      rules={{ required: true }}
+                    />
+                    {errors.validUntil && <span>This field is required</span>}
+                  </Box>
                 </Grid>
               </Grid>
             </StyledFieldset>

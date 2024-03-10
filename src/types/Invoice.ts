@@ -8,8 +8,8 @@ const InvoiceSchema = z.object({
   sender: BillingDetails,
   items: z.array(OrderLineSchema),
   name: z.string(),
-  createdAt: z.string(),
-  validUntil: z.string(),
+  createdAt: z.date(),
+  validUntil: z.date(),
 });
 
 export type Invoice = z.infer<typeof InvoiceSchema>;
