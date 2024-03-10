@@ -6,21 +6,19 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
 import { z } from 'zod';
 import InvoiceSchema from '../types/Invoice.ts';
 
-interface EditInvoiceProps {
-  defaultValues?: any;
-  isEditMode?: boolean;
-}
-
-const EditInvoicePage = (props: EditInvoiceProps) => {
+const ViewInvoicePage = () => {
   const { id } = z.object({ id: z.string() }).parse(useParams());
-
   const { data: invoice, status } = useGetInvoice(id);
+
+  const [searchParams] = useSearchParams();
+
+  const isEditMode = searchParams.get('mode') === 'edit';
 
   if (status === 'loading') {
     return <div>Loading...</div>;
@@ -30,10 +28,15 @@ const EditInvoicePage = (props: EditInvoiceProps) => {
     return <div>Error...</div>;
   }
 
-  return <ViewInvoice defaultValues={invoice} isEditMode={props.isEditMode} />;
+  return <ViewInvoiceForm defaultValues={invoice} isEditMode={isEditMode} />;
 };
 
-function ViewInvoice({ defaultValues, isEditMode }: EditInvoiceProps) {
+interface InvoiceFormProps {
+  defaultValues?: any;
+  isEditMode: boolean;
+}
+
+function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const {
@@ -105,28 +108,12 @@ function ViewInvoice({ defaultValues, isEditMode }: EditInvoiceProps) {
             </StyledFieldset>
           </Grid>
           <Grid item sm={6}>
-            <Box
-              display="flex"
-              justifyContent="flex-start"
-              flexDirection="row-reverse"
-              gap={1}
-            >
-              {isEditMode && (
-                <Button color="secondary" variant="contained" type="submit">
-                  <Box display="flex">
-                    <Icon sx={{ mr: 1 }}>save</Icon>
-                    <span>
-                      {updateInvoiceMutation.isLoading
-                        ? t('LABELS.SAVING')
-                        : t('LABELS.SAVE')}
-                    </span>
-                  </Box>
-                </Button>
-              )}
+            <Box display="flex" justifyContent="flex-end" gap={1}>
               <Button
                 variant="contained"
                 color={isEditMode ? 'error' : 'secondary'}
-                href={isEditMode ? `/invoice/${id}` : `/invoice/${id}/edit`}
+                component={Link}
+                to={isEditMode ? `/invoice/${id}` : `/invoice/${id}?mode=edit`}
               >
                 {isEditMode ? (
                   <>
@@ -140,6 +127,18 @@ function ViewInvoice({ defaultValues, isEditMode }: EditInvoiceProps) {
                   </>
                 )}
               </Button>
+              {isEditMode && (
+                <Button color="secondary" variant="contained" type="submit">
+                  <Box display="flex">
+                    <Icon sx={{ mr: 1 }}>save</Icon>
+                    <span>
+                      {updateInvoiceMutation.isLoading
+                        ? t('LABELS.SAVING')
+                        : t('LABELS.SAVE')}
+                    </span>
+                  </Box>
+                </Button>
+              )}
             </Box>
           </Grid>
 
@@ -178,4 +177,4 @@ function ViewInvoice({ defaultValues, isEditMode }: EditInvoiceProps) {
   );
 }
 
-export default EditInvoicePage;
+export default ViewInvoicePage;

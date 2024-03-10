@@ -6,7 +6,7 @@ import Root from './routes/root';
 import theme from './theme.ts';
 import Index from './routes';
 
-import AddInvoice from './routes/add-invoice.tsx';
+import AddInvoicePage from './routes/add-invoice.tsx';
 import { ThemeProvider } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -14,7 +14,7 @@ import { Suspense } from 'react';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import EditInvoicePage from './routes/edit-invoice.tsx';
+import ViewInvoicePage from './routes/view-invoice.tsx';
 
 const router = createBrowserRouter([
   {
@@ -25,15 +25,11 @@ const router = createBrowserRouter([
       { index: true, element: <Index /> },
       {
         path: '/add-invoice',
-        element: <AddInvoice />,
+        element: <AddInvoicePage />,
       },
       {
         path: '/invoice/:id',
-        element: <EditInvoicePage isEditMode={false} />,
-      },
-      {
-        path: '/invoice/:id/edit',
-        element: <EditInvoicePage isEditMode={true} />,
+        element: <ViewInvoicePage />,
       },
     ],
   },

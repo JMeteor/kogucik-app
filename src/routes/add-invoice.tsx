@@ -22,7 +22,7 @@ import InvoicesService from '../services/invoices/invoicesService.ts';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import dayjs from 'dayjs';
 
-export default function AddInvoice() {
+export default function AddInvoicePage() {
   const { t } = useTranslation();
   const {
     handleSubmit,
