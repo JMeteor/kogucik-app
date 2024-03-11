@@ -96,7 +96,6 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
                     disabled={!isEditMode}
                     name="createDate"
                     control={control}
-                    defaultValue={null}
                     render={({ field }) => (
                       <DatePicker {...field} label={t('INVOICE.CREATED')} />
                     )}
@@ -107,7 +106,6 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
                     disabled={!isEditMode}
                     name="dueDate"
                     control={control}
-                    defaultValue={null}
                     render={({ field }) => (
                       <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
                     )}

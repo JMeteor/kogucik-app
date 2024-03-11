@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import { InvoiceSchema } from '../../types/Invoice.ts';
+import { z } from 'zod';
 
 class InvoicesService {
   private static readonly BASE_URL = 'http://localhost:4000/api/invoices';

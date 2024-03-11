@@ -10,8 +10,8 @@ import './App.css';
 import theme from './theme.ts';
 
 import { ThemeProvider } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'; // Zmienic na date-fns
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
 function Page() {
   return (
     <div className="app">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <RouterProvider router={router} />
         </ThemeProvider>

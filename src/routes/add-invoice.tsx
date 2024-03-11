@@ -16,7 +16,7 @@ import {
 
 import { visuallyHidden } from '@mui/utils';
 import { DatePicker } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
+import { format, parseISO } from 'date-fns';
 
 import { useTranslation } from 'react-i18next';
 import { BillingForm } from '../components/BillingForm.tsx';
@@ -25,7 +25,7 @@ import { StyledFieldset } from '../components/StyledFieldset.tsx';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import { useCreateInvoice } from '../hooks/invoices.hooks.ts';
 
-const todayDate = dayjs(new Date());
+const todayDate = new Date().toISOString();
 
 const billingEmptyValues: BillingDetails = {
   companyName: '',
@@ -44,7 +44,7 @@ const invoiceEmptyValues: Invoice = {
   sender: billingEmptyValues,
   items: [],
   name: '',
-  createdAt: todayDate.toDate(),
+  createdAt: todayDate,
   validUntil: null,
 };
 
@@ -70,8 +70,8 @@ export default function AddInvoicePage({ defaultValues = invoiceEmptyValues }) {
     const invoice = {
       ...data,
       id,
-      createdAt: dayjs(data.createdAt).toISOString(),
-      validUntil: dayjs(data.createdAt).toISOString(),
+      createdAt: parseISO(data.createdAt),
+      validUntil: parseISO(data.createdAt),
     };
 
     createInvoiceMutation.mutate(invoice, {
@@ -110,11 +110,13 @@ export default function AddInvoicePage({ defaultValues = invoiceEmptyValues }) {
                       render={({ field }) => (
                         <DatePicker
                           {...field}
-                          format={'DD/MM/YYYY'}
+                          format={'dd/MM/yyyy'}
                           label={t('INVOICE.CREATED')}
-                          value={field.value ? dayjs(field.value) : null}
+                          value={field.value ? new Date(field.value) : null}
                           onChange={(date) => {
-                            field.onChange(date ? dayjs(date).toDate() : null);
+                            field.onChange(
+                              date ? format(date, 'yyyy-MM-dd') : null,
+                            );
                           }}
                           sx={{ mb: 1 }}
                         />
@@ -131,10 +133,13 @@ export default function AddInvoicePage({ defaultValues = invoiceEmptyValues }) {
                       render={({ field }) => (
                         <DatePicker
                           {...field}
-                          format={'DD/MM/YYYY'}
+                          format={'dd/MM/yyyy'}
                           label={t('INVOICE.VALID_UNTIL')}
-                          onChange={(date: Date | null) => {
-                            field.onChange(date ? dayjs(date).toDate() : null);
+                          value={field.value ? new Date(field.value) : null}
+                          onChange={(date) => {
+                            field.onChange(
+                              date ? format(date, 'yyyy-MM-dd') : null,
+                            );
                           }}
                           sx={{ mb: 1 }}
                         />

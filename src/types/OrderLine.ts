@@ -6,7 +6,7 @@ export const OrderLineSchema = z.object({
   amount: z.number().nullable(),
   unit: z.string(),
   tax: z.number().nullable(),
-  price: z.number().nullable(),
+  price: z.string(),
 });
 
 export type OrderLine = z.infer<typeof OrderLineSchema>;
