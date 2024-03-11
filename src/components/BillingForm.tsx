@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { TextField, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { type Invoice } from '../types/Invoice.ts';
 
 const StyledFieldset = styled.fieldset`
   border: none;
@@ -11,17 +12,12 @@ const StyledFieldset = styled.fieldset`
 
 interface BillingFormProps {
   isEditMode?: boolean;
-  name: string;
-  register: ReturnType<typeof useForm>['register'];
-  errors: Record<string, any>;
+  name: 'recipient' | 'sender';
+  register: UseFormRegister<Invoice>;
+  errors: FieldErrors<Invoice>;
 }
 
-export function BillingForm({
-  name,
-  register,
-  isEditMode,
-  errors,
-}: BillingFormProps) {
+export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
   const { t } = useTranslation();
 
   return (
@@ -38,8 +34,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.COMPANY_NAME')}
         variant="standard"
         fullWidth
-        error={Boolean(errors && errors[`${name}.companyName`])}
-        helperText={errors?.[`${name}.companyName`]?.message}
         sx={{ mb: 1 }}
       />
 

@@ -1,30 +1,28 @@
-import {
-  CreateInvoiceDto,
-  GetAllInvoicesDto,
-  GetInvoiceDto,
-  UpdateInvoiceDto,
-} from './types';
+import { z } from 'zod';
+import { InvoiceSchema } from '../../types/Invoice.ts';
 
 class InvoicesService {
   private static readonly BASE_URL = 'http://localhost:4000/api/invoices';
 
-  fetchAllInvoices = async (): Promise<GetAllInvoicesDto[]> => {
+  fetchAllInvoices = async () => {
     const response = await fetch(InvoicesService.BASE_URL);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return await response.json();
+    const data = await response.json();
+    return z.array(InvoiceSchema).parse(data);
   };
 
-  fetchInvoiceById = async (id: string): Promise<GetInvoiceDto> => {
+  fetchInvoiceById = async (id: string) => {
     const response = await fetch(`${InvoicesService.BASE_URL}/${id}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return await response.json();
+    const data = await response.json();
+    return InvoiceSchema.parse(data);
   };
 
-  createInvoice = async (data: CreateInvoiceDto): Promise<void> => {
+  createInvoice = async (data: unknown) => {
     const response = await fetch(InvoicesService.BASE_URL, {
       method: 'POST',
       headers: {
@@ -38,7 +36,7 @@ class InvoicesService {
     return await response.json();
   };
 
-  updateInvoice = async (id: string, data: UpdateInvoiceDto): Promise<void> => {
+  updateInvoice = async (id: string, data: unknown) => {
     const response = await fetch(`${InvoicesService.BASE_URL}/${id}`, {
       method: 'PUT',
       headers: {
@@ -52,7 +50,7 @@ class InvoicesService {
     return await response.json();
   };
 
-  deleteInvoice = async (id: string): Promise<void> => {
+  deleteInvoice = async (id: string) => {
     const response = await fetch(`${InvoicesService.BASE_URL}/${id}`, {
       method: 'DELETE',
     });

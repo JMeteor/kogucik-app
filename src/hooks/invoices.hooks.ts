@@ -22,9 +22,7 @@ export const useCreateInvoice = () => {
   return useMutation(
     (data: CreateInvoiceDto) => InvoicesService.createInvoice(data),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries([INVOICE_KEY]);
-      },
+      onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
     },
   );
 };
@@ -36,9 +34,7 @@ export const useUpdateInvoice = () => {
     ({ id, data }: { id: string; data: UpdateInvoiceDto }) =>
       InvoicesService.updateInvoice(id, data),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries([INVOICE_KEY]);
-      },
+      onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
     },
   );
 };
@@ -47,8 +43,6 @@ export const useDeleteInvoice = () => {
   const queryClient = useQueryClient();
 
   return useMutation((id: string) => InvoicesService.deleteInvoice(id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries([INVOICE_KEY]);
-    },
+    onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
   });
 };

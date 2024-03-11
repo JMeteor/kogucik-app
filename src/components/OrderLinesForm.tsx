@@ -1,16 +1,22 @@
 import { visuallyHidden } from '@mui/utils';
 import { Box, Button, Icon, Typography } from '@mui/material';
-import { useFieldArray, useForm } from 'react-hook-form';
+import {
+  type Control,
+  type FieldErrors,
+  type UseFormRegister,
+  useFieldArray,
+} from 'react-hook-form';
 import { OrderLinesRow } from './OrderLinesRow.tsx';
 import { StyledFieldset } from './StyledFieldset.tsx';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import { useTranslation } from 'react-i18next';
+import type { Invoice } from '../types/Invoice.ts';
 
 interface OrderLinesFormProps {
   isEditMode?: boolean;
-  control: ReturnType<typeof useForm>['control'];
-  register: ReturnType<typeof useForm>['register'];
-  errors: Record<string, any>;
+  control: Control<Invoice>;
+  register: UseFormRegister<Invoice>;
+  errors: FieldErrors<Invoice>;
 }
 
 export function OrderLinesForm({
@@ -29,10 +35,10 @@ export function OrderLinesForm({
     append({
       id: generateUniqueId(),
       name: '',
-      quantity: '',
+      amount: null,
       unit: '',
-      tax: '',
-      price: '',
+      tax: null,
+      price: null,
     });
   };
 

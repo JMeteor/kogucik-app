@@ -1,13 +1,14 @@
 import { Box, Icon, IconButton, TextField } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { type FieldErrors, type UseFormRegister } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import type { Invoice } from '../types/Invoice.ts';
 
 interface OrderLinesRowProps {
-  register: ReturnType<typeof useForm>['register'];
+  register: UseFormRegister<Invoice>;
   remove: (index: number) => void;
   index: number;
   isEditMode?: boolean;
-  errors: Record<string, any>;
+  errors: FieldErrors<Invoice>;
 }
 
 export function OrderLinesRow({
@@ -34,7 +35,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.name`)}
           disabled={!isEditMode}
           defaultValue=""
-          error={Boolean(errors?.items?.[index]?.companyName)}
+          error={Boolean(errors?.items?.[index]?.name)}
           label={t('ORDER_LINE.NAME')}
           variant="standard"
           fullWidth

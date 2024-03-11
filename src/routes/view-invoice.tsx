@@ -18,7 +18,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
 import { z } from 'zod';
-import InvoiceSchema from '../types/Invoice.ts';
+import { InvoiceSchema } from '../types/Invoice.ts';
 
 const ViewInvoicePage = () => {
   const { id } = z.object({ id: z.string() }).parse(useParams());

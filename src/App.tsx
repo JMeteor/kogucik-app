@@ -10,7 +10,7 @@ import './App.css';
 import theme from './theme.ts';
 
 import { ThemeProvider } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'; // Zmienic na date-fns
 import { LocalizationProvider } from '@mui/x-date-pickers';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
