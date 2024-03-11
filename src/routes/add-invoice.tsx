@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import InvoiceSchema from '../types/Invoice.ts';
+import InvoiceSchema, {Invoice} from '../types/Invoice.ts';
 
 import {
   Alert,
@@ -23,8 +23,32 @@ import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { StyledFieldset } from '../components/StyledFieldset.tsx';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import { useCreateInvoice } from '../hooks/invoices.hooks.ts';
+import {BillingDetails} from "../types/BillingDetails.ts";
 
-export default function AddInvoicePage() {
+const todayDate = dayjs(new Date());
+
+const personalDefaultValues: BillingDetails = {
+  companyName: '',
+  city: '',
+  street: '',
+  postcode: '',
+  nip: '',
+  phone: '',
+  email: '',
+  bankAccount: ''
+}
+
+const emptyValues: Invoice = {
+  id: undefined,
+  recipient: personalDefaultValues,
+  sender: personalDefaultValues,
+  items: [],
+  name: '',
+  createdAt: todayDate.toDate(),
+  validUntil: null
+}
+
+export default function AddInvoicePage({ defaultValues = emptyValues }) {
   const { t } = useTranslation();
   const {
     handleSubmit,
@@ -35,9 +59,8 @@ export default function AddInvoicePage() {
   } = useForm({
     resolver: zodResolver(InvoiceSchema),
     mode: 'onChange',
+    defaultValues
   });
-
-  const todayDate = dayjs(new Date());
 
   const createInvoiceMutation = useCreateInvoice();
 
@@ -84,13 +107,13 @@ export default function AddInvoicePage() {
                     <Controller
                       name="createdAt"
                       control={control}
-                      defaultValue={todayDate}
                       render={({ field }) => (
                         <DatePicker
                           {...field}
                           format={'DD/MM/YYYY'}
                           label={t('INVOICE.CREATED')}
-                          onChange={(date: Date | null) => {
+                          value={field.value ? dayjs(field.value) : null}
+                          onChange={(date) => {
                             field.onChange(date ? dayjs(date).toDate() : null);
                           }}
                           sx={{ mb: 1 }}
@@ -175,7 +198,7 @@ export default function AddInvoicePage() {
 
           <Grid item sm={6}>
             <BillingForm
-              name={'recipient'}
+              name='recipient'
               register={register}
               isEditMode={true}
               errors={errors}
@@ -184,7 +207,7 @@ export default function AddInvoicePage() {
 
           <Grid item sm={6}>
             <BillingForm
-              name={'sender'}
+              name='sender'
               register={register}
               isEditMode={true}
               errors={errors}

@@ -21,7 +21,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import GetItemDto from '../services/invoices/types/GetItemDto.ts';
-import GetAllInvoicesDto from '../services/invoices/types/GetAllInvoicesDto.ts';
 import { useDeleteInvoice, useGetInvoices } from '../hooks/invoices.hooks.ts';
 import { sortInvoicesByCreationDate } from '../services/invoices/helpers/sortInvoicesByDate.ts';
 
@@ -84,7 +83,7 @@ function InvoiceListPage() {
             </TableHead>
             <TableBody>
               {sortedInvoices?.map(
-                (invoice: GetAllInvoicesDto, index: number) => (
+                (invoice, index) => (
                   <TableRow key={index}>
                     <TableCell>
                       <Link to={`/invoice/${invoice.id}`}>{invoice.name}</Link>

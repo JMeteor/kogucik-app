@@ -1,19 +1,21 @@
 import {
-  CreateInvoiceDto,
-  GetAllInvoicesDto,
+  type CreateInvoiceDto,
   GetInvoiceDto,
   UpdateInvoiceDto,
 } from './types';
+import InvoiceSchema from "../../types/Invoice.ts";
+import {z} from "zod";
 
 class InvoicesService {
   private static readonly BASE_URL = 'http://localhost:4000/api/invoices';
 
-  fetchAllInvoices = async (): Promise<GetAllInvoicesDto[]> => {
+  fetchAllInvoices = async () => {
     const response = await fetch(InvoicesService.BASE_URL);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    return await response.json();
+    const data = await response.json();
+    return z.array(InvoiceSchema).parse(data);
   };
 
   fetchInvoiceById = async (id: string): Promise<GetInvoiceDto> => {

@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { TextField, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import type { UseFormRegister } from 'react-hook-form';
+import type { Invoice } from '../types/Invoice.ts';
 
 const StyledFieldset = styled.fieldset`
   border: none;
@@ -11,8 +12,8 @@ const StyledFieldset = styled.fieldset`
 
 interface BillingFormProps {
   isEditMode?: boolean;
-  name: string;
-  register: ReturnType<typeof useForm>['register'];
+  name: 'recipient' | 'sender';
+  register: UseFormRegister<Invoice>;
   errors: Record<string, any>;
 }
 

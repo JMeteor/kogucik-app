@@ -1,15 +1,16 @@
 import { z } from 'zod';
 
-const BillingDetailsSchema = z.object({
+export const BillingDetailsSchema = z.object({
   companyName: z.string(),
   city: z.string(),
   street: z.string(),
-  postcode: z.string(),
-  nip: z.string(),
+  postcode: z.string({ required_error: 'Postcode is required' }),
+  nip: z.string().refine(nip => nip.length === 10, {
+    message: 'NIP must be 10 characters long',
+  }),
   phone: z.string(),
   email: z.string(),
   bankAccount: z.string(),
 });
 
 export type BillingDetails = z.infer<typeof BillingDetailsSchema>;
-export default BillingDetailsSchema;
