@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import InvoiceSchema from '../types/Invoice.ts';
 
 import {
   Alert,
@@ -10,17 +12,17 @@ import {
   Icon,
   TextField,
 } from '@mui/material';
+
 import { visuallyHidden } from '@mui/utils';
 import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+
+import { useTranslation } from 'react-i18next';
 import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { StyledFieldset } from '../components/StyledFieldset.tsx';
-import InvoiceSchema from '../types/Invoice.ts';
-import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import InvoicesService from '../services/invoices/invoicesService.ts';
 import { generateUniqueId } from '../helpers/generateId.ts';
-import dayjs from 'dayjs';
+import { useCreateInvoice } from '../hooks/invoices.hooks.ts';
 
 export default function AddInvoicePage() {
   const { t } = useTranslation();
@@ -29,18 +31,23 @@ export default function AddInvoicePage() {
     register,
     control,
     formState: { errors },
+    reset,
   } = useForm({
     resolver: zodResolver(InvoiceSchema),
     mode: 'onChange',
   });
 
-  // idle, loading, success, error
-  const [status, setStatus] = useState('idle');
+  const todayDate = dayjs(new Date());
+
+  const createInvoiceMutation = useCreateInvoice();
 
   console.log(errors);
 
   const onSubmit = async (data: any) => {
     const id = generateUniqueId();
+
+    console.log('Form data before transformation:', data);
+
     const invoice = {
       ...data,
       id,
@@ -48,19 +55,15 @@ export default function AddInvoicePage() {
       validUntil: dayjs(data.createdAt).toISOString(),
     };
 
-    setStatus('loading');
-    console.log('Saving invoice...', invoice);
+    console.log('Transformed form data:', invoice);
 
-    try {
-      await InvoicesService.createInvoice(invoice);
-      setStatus('success');
-    } catch (error) {
-      console.log(error);
-      setStatus('error');
-    }
+    createInvoiceMutation.mutate(invoice, {
+      onSuccess: () => {
+        reset();
+      },
+      onError: () => {},
+    });
   };
-
-  const todayDate = dayjs(new Date());
 
   return (
     <div>
@@ -68,7 +71,7 @@ export default function AddInvoicePage() {
         <h1 style={visuallyHidden}>{t('ADD_INVOICE')}</h1>
       </Box>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={6}>
           <Grid item sm={6}>
             <StyledFieldset>
@@ -79,7 +82,6 @@ export default function AddInvoicePage() {
                 required
                 fullWidth
                 error={!!errors.name}
-                helperText={errors.name && 'This field is required'}
               />
 
               <Grid container spacing={4} sx={{ mt: 2 }}>
@@ -139,13 +141,18 @@ export default function AddInvoicePage() {
                 <Box display="flex">
                   <Icon sx={{ mr: 1 }}>save</Icon>
                   <span>
-                    {status === 'loading'
+                    {createInvoiceMutation.isLoading
                       ? t('LABELS.SAVING')
                       : t('LABELS.SAVE')}
                   </span>
                 </Box>
               </Button>
-              <Button color="secondary" variant="contained" href="/">
+              <Button
+                color="secondary"
+                variant="contained"
+                component={Link}
+                to="/"
+              >
                 <span>{t('LABELS.CANCEL')}</span>
               </Button>
             </Box>
@@ -157,13 +164,13 @@ export default function AddInvoicePage() {
                 transform: 'translateX(-50%)',
               }}
             >
-              {status === 'success' && (
+              {createInvoiceMutation.isSuccess && (
                 <Alert severity="success">
                   <AlertTitle>Success</AlertTitle>
                   Invoice saved successfully.
                 </Alert>
               )}
-              {status === 'error' && (
+              {createInvoiceMutation.isError && (
                 <Alert severity="error">
                   <AlertTitle>Error</AlertTitle>
                   Something went wrong.

@@ -7,7 +7,7 @@ const InvoiceSchema = z.object({
   recipient: BillingDetails,
   sender: BillingDetails,
   items: z.array(OrderLineSchema),
-  name: z.string(),
+  name: z.string().min(1, 'Name is required'),
   createdAt: z.date(),
   validUntil: z.date(),
 });
