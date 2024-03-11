@@ -3,17 +3,20 @@ import { Box, Button, Icon, Typography } from '@mui/material';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { OrderLinesRow } from './OrderLinesRow.tsx';
 import { StyledFieldset } from './StyledFieldset.tsx';
+import { generateUniqueId } from '../helpers/generateId.ts';
 
 interface OrderLinesFormProps {
-  control: ReturnType<typeof useForm>['control'];
   isEditMode?: boolean;
+  control: ReturnType<typeof useForm>['control'];
   register: ReturnType<typeof useForm>['register'];
+  errors: Record<string, any>;
 }
 
 export function OrderLinesForm({
   control,
   isEditMode,
   register,
+  errors,
 }: OrderLinesFormProps) {
   const { fields, append, remove } = useFieldArray({
     control,
@@ -21,7 +24,14 @@ export function OrderLinesForm({
   });
 
   const handleAddItem = () => {
-    append({ name: '', quantity: '', unit: '', tax: '', price: '' });
+    append({
+      id: generateUniqueId(),
+      name: '',
+      quantity: '',
+      unit: '',
+      tax: '',
+      price: '',
+    });
   };
 
   return (
@@ -36,6 +46,7 @@ export function OrderLinesForm({
           index={index}
           register={register}
           remove={remove}
+          errors={errors}
         />
       ))}
       <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>

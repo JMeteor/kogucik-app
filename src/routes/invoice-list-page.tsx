@@ -23,6 +23,7 @@ import { Link } from 'react-router-dom';
 import GetItemDto from '../services/invoices/types/GetItemDto.ts';
 import GetAllInvoicesDto from '../services/invoices/types/GetAllInvoicesDto.ts';
 import { useDeleteInvoice, useGetInvoices } from '../hooks/invoices.hooks.ts';
+import { sortInvoicesByCreationDate } from '../services/invoices/helpers/sortInvoicesByDate.ts';
 
 function InvoiceListPage() {
   const { t } = useTranslation();
@@ -53,6 +54,8 @@ function InvoiceListPage() {
 
   const { data: invoices, isLoading, isError } = useGetInvoices();
 
+  const sortedInvoices = invoices ? sortInvoicesByCreationDate(invoices) : [];
+
   return (
     <>
       {isLoading ? (
@@ -80,33 +83,35 @@ function InvoiceListPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {invoices?.map((invoice: GetAllInvoicesDto, index: number) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Link to={`/invoice/${invoice.id}`}>{invoice.name}</Link>
-                  </TableCell>
-                  <TableCell align="right">{invoice.createdAt}</TableCell>
-                  <TableCell align="right">{invoice.validUntil}</TableCell>
-                  <TableCell align="right">
-                    {totalAmount(invoice.items)}
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      aria-label="edit"
-                      component={Link}
-                      to={`/invoice/${invoice.id}?mode=edit`}
-                    >
-                      <Icon>edit</Icon>
-                    </IconButton>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={() => handleDelete(invoice.id)}
-                    >
-                      <Icon>delete</Icon>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {sortedInvoices?.map(
+                (invoice: GetAllInvoicesDto, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Link to={`/invoice/${invoice.id}`}>{invoice.name}</Link>
+                    </TableCell>
+                    <TableCell align="right">{invoice.createdAt}</TableCell>
+                    <TableCell align="right">{invoice.validUntil}</TableCell>
+                    <TableCell align="right">
+                      {totalAmount(invoice.items)}
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        aria-label="edit"
+                        component={Link}
+                        to={`/invoice/${invoice.id}?mode=edit`}
+                      >
+                        <Icon>edit</Icon>
+                      </IconButton>
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleDelete(invoice.id)}
+                      >
+                        <Icon>delete</Icon>
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ),
+              )}
             </TableBody>
             <Dialog
               open={deleteModalOpen}

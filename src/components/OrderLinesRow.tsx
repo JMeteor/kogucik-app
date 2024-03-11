@@ -7,6 +7,7 @@ interface OrderLinesRowProps {
   remove: (index: number) => void;
   index: number;
   isEditMode?: boolean;
+  errors: Record<string, any>;
 }
 
 export function OrderLinesRow({
@@ -14,6 +15,7 @@ export function OrderLinesRow({
   remove,
   index,
   isEditMode,
+  errors,
 }: OrderLinesRowProps) {
   const { t } = useTranslation();
 
@@ -32,6 +34,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.name`)}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors && errors[`items.${index}.companyName`])}
           label={t('ORDER_LINE.NAME')}
           variant="standard"
           fullWidth
@@ -39,12 +42,12 @@ export function OrderLinesRow({
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.amount`)}
+          {...register(`items.${index}.amount`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors && errors[`items.${index}.amount`])}
           label={t('ORDER_LINE.AMOUNT')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>
@@ -53,31 +56,31 @@ export function OrderLinesRow({
           {...register(`items.${index}.unit`)}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors && errors[`items.${index}.unit`])}
           label={t('ORDER_LINE.UNIT')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.tax`)}
+          {...register(`items.${index}.tax`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors && errors[`items.${index}.tax`])}
           label={t('ORDER_LINE.TAX')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.price`)}
+          {...register(`items.${index}.price`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors && errors[`items.${index}.price`])}
           label={t('ORDER_LINE.PRICE')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>

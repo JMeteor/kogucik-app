@@ -207,6 +207,7 @@ export default function AddInvoicePage() {
             control={control}
             register={register}
             isEditMode={true}
+            errors={errors}
           />
         </Box>
       </form>

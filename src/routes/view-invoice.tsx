@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Icon, TextField } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Grid,
+  Icon,
+  TextField,
+} from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { StyledFieldset } from '../components/StyledFieldset.tsx';
 import { Controller, useForm } from 'react-hook-form';
@@ -140,6 +148,27 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
                 </Button>
               )}
             </Box>
+            <div
+              style={{
+                position: 'absolute',
+                top: '10%',
+                left: '50%',
+                transform: 'translateX(-50%)',
+              }}
+            >
+              {updateInvoiceMutation.isSuccess && (
+                <Alert severity="success">
+                  <AlertTitle>Success</AlertTitle>
+                  Invoice saved successfully.
+                </Alert>
+              )}
+              {updateInvoiceMutation.isError && (
+                <Alert severity="error">
+                  <AlertTitle>Error</AlertTitle>
+                  Something went wrong.
+                </Alert>
+              )}
+            </div>
           </Grid>
 
           <Grid item sm={6}>
@@ -170,6 +199,7 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
             control={control}
             register={register}
             isEditMode={isEditMode}
+            errors={errors}
           />
         </Box>
       </form>
