@@ -25,7 +25,7 @@ import InvoicesService from '../services/invoices/invoicesService.ts';
 import GetItemDto from '../services/invoices/types/GetItemDto.ts';
 import GetAllInvoicesDto from '../services/invoices/types/GetAllInvoicesDto.ts';
 
-function Index() {
+function InvoiceListPage() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -90,7 +90,7 @@ function Index() {
                   <IconButton
                     aria-label="edit"
                     component={Link}
-                    to={`/invoice/${invoice.id}/edit`}
+                    to={`/invoice/${invoice.id}?mode=edit`}
                   >
                     <Icon>edit</Icon>
                   </IconButton>
@@ -124,4 +124,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default InvoiceListPage;

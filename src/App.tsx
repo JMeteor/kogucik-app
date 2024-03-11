@@ -1,20 +1,20 @@
-import './App.css';
+import { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
 import Root from './routes/root';
-
-import theme from './theme.ts';
-import Index from './routes';
-
 import AddInvoicePage from './routes/add-invoice.tsx';
+import InvoiceListPage from './routes/invoice-list-page.tsx';
+import ViewInvoicePage from './routes/view-invoice.tsx';
+
+import './App.css';
+import theme from './theme.ts';
+
 import { ThemeProvider } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { Suspense } from 'react';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import ViewInvoicePage from './routes/view-invoice.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Index /> },
+      { index: true, element: <InvoiceListPage /> },
       {
         path: '/add-invoice',
         element: <AddInvoicePage />,
