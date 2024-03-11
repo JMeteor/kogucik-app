@@ -4,12 +4,11 @@ import { CreateInvoiceDto, UpdateInvoiceDto } from '../services/invoices/types';
 
 const INVOICE_KEY = 'invoice';
 
-export const useGetInvoices = () => {
+export const useGetInvoices = () =>
   useQuery({
     queryKey: [INVOICE_KEY],
     queryFn: () => InvoicesService.fetchAllInvoices(),
   });
-};
 
 export const useGetInvoice = (id: string) =>
   useQuery({
