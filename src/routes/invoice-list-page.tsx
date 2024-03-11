@@ -112,18 +112,18 @@ function InvoiceListPage() {
               open={deleteModalOpen}
               onClose={() => setDeleteModalOpen(false)}
             >
-              <DialogTitle>Confirm Delete</DialogTitle>
+              <DialogTitle>{t('DELETE_INVOICE.TITLE')}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  Are you sure you want to delete this invoice?
+                  {t('DELETE_INVOICE.CONTENT')}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setDeleteModalOpen(false)}>
-                  Cancel
+                  {t('LABELS.CANCEL')}
                 </Button>
                 <Button onClick={handleDeleteConfirm} autoFocus>
-                  Delete
+                  {t('LABELS.DELETE')}
                 </Button>
               </DialogActions>
             </Dialog>

@@ -46,5 +46,9 @@
     "DELETE": "Usuń",
     "EDIT": "Edytuj",
     "CANCEL": "Anuluj"
+  },
+  "DELETE_INVOICE": {
+    "TITLE": "Potwierdź usunięcie",
+    "CONTENT" : "Czy na pewno chcesz usunąć tę fakturę?"
   }
 }
