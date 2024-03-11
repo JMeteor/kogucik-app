@@ -12,6 +12,8 @@
     "SENDER": "Wystawca"
   },
   "ORDER_LINE": {
+    "ITEM": "Przedmiot",
+    "ADD_ITEM": "Dodaj przedmiot",
     "NAME": "Nazwa",
     "AMOUNT": "Ilość",
     "UNIT": "Jednostka",

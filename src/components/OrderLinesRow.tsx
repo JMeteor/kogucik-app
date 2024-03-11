@@ -34,7 +34,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.name`)}
           disabled={!isEditMode}
           defaultValue=""
-          error={Boolean(errors && errors[`items.${index}.companyName`])}
+          error={Boolean(errors?.items?.[index]?.companyName)}
           label={t('ORDER_LINE.NAME')}
           variant="standard"
           fullWidth
@@ -45,7 +45,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.amount`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
-          error={Boolean(errors && errors[`items.${index}.amount`])}
+          error={Boolean(errors?.items?.[index]?.amount)}
           label={t('ORDER_LINE.AMOUNT')}
           variant="standard"
           fullWidth
@@ -56,7 +56,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.unit`)}
           disabled={!isEditMode}
           defaultValue=""
-          error={Boolean(errors && errors[`items.${index}.unit`])}
+          error={Boolean(errors?.items?.[index]?.unit)}
           label={t('ORDER_LINE.UNIT')}
           variant="standard"
           fullWidth
@@ -67,7 +67,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.tax`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
-          error={Boolean(errors && errors[`items.${index}.tax`])}
+          error={Boolean(errors?.items?.[index]?.tax)}
           label={t('ORDER_LINE.TAX')}
           variant="standard"
           fullWidth
@@ -78,7 +78,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.price`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
-          error={Boolean(errors && errors[`items.${index}.price`])}
+          error={Boolean(errors?.items?.[index]?.price)}
           label={t('ORDER_LINE.PRICE')}
           variant="standard"
           fullWidth

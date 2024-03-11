@@ -41,12 +41,8 @@ export default function AddInvoicePage() {
 
   const createInvoiceMutation = useCreateInvoice();
 
-  console.log(errors);
-
   const onSubmit = async (data: any) => {
     const id = generateUniqueId();
-
-    console.log('Form data before transformation:', data);
 
     const invoice = {
       ...data,
@@ -54,8 +50,6 @@ export default function AddInvoicePage() {
       createdAt: dayjs(data.createdAt).toISOString(),
       validUntil: dayjs(data.createdAt).toISOString(),
     };
-
-    console.log('Transformed form data:', invoice);
 
     createInvoiceMutation.mutate(invoice, {
       onSuccess: () => {

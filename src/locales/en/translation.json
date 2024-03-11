@@ -12,6 +12,8 @@
     "SENDER": "Sender"
   },
   "ORDER_LINE": {
+    "ITEM": "Item",
+    "ADD_ITEM": "Add item",
     "NAME": "Name",
     "AMOUNT": "Amount",
     "UNIT": "Unit",

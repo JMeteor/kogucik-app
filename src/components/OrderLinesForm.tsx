@@ -4,6 +4,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { OrderLinesRow } from './OrderLinesRow.tsx';
 import { StyledFieldset } from './StyledFieldset.tsx';
 import { generateUniqueId } from '../helpers/generateId.ts';
+import { useTranslation } from 'react-i18next';
 
 interface OrderLinesFormProps {
   isEditMode?: boolean;
@@ -18,6 +19,7 @@ export function OrderLinesForm({
   register,
   errors,
 }: OrderLinesFormProps) {
+  const { t } = useTranslation();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'items',
@@ -37,7 +39,7 @@ export function OrderLinesForm({
   return (
     <StyledFieldset>
       <legend style={visuallyHidden}>
-        <Typography variant="h4">Item</Typography>
+        <Typography variant="h4">{t('ORDER_LINE.ITEM')}</Typography>
       </legend>
       {fields.map((field, index) => (
         <OrderLinesRow
@@ -59,7 +61,7 @@ export function OrderLinesForm({
           >
             <Box display="flex">
               <Icon sx={{ mr: 1 }}>add</Icon>
-              <span>Add item</span>
+              <span>{t('ORDER_LINE.ADD_ITEM')}</span>
             </Box>
           </Button>
         )}
