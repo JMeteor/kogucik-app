@@ -60,14 +60,15 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
   const updateInvoiceMutation = useUpdateInvoice();
 
   const onSubmit = async (data: any) => {
-    console.log('Sending new data...', data);
     if (!isEditMode || !id) return;
 
-    try {
-      await updateInvoiceMutation.mutateAsync({ id, data });
-    } catch (error) {
-      console.log('error');
-    }
+    await updateInvoiceMutation.mutateAsync(
+      { id, data },
+      {
+        onSuccess: () => {},
+        onError: () => {},
+      },
+    );
   };
 
   return (
