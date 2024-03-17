@@ -8,6 +8,7 @@ import { BillingForm } from './BillingForm.tsx';
 import { OrderLinesForm } from './OrderLinesForm.tsx';
 import { StyledFieldset } from './StyledFieldset.tsx';
 import { ReactNode } from 'react';
+import { parseISO } from 'date-fns';
 
 export interface InvoiceFormProps {
   children?: (form: any) => ReactNode;
@@ -57,21 +58,41 @@ export const InvoiceForm = ({
                 <Grid item xs={12} sm={6}>
                   <Controller
                     disabled={!isEditMode}
-                    name="createDate"
+                    name="createAt"
                     control={control}
-                    render={({ field }) => (
-                      <DatePicker {...field} label={t('INVOICE.CREATED')} />
-                    )}
+                    render={({ field }) => {
+                      console.log('createAt', field);
+                      return (
+                        <DatePicker
+                          {...field}
+                          value={field.value ? parseISO(field.value) : null}
+                          onChange={(date: any) =>
+                            field.onChange(date.toISOString())
+                          }
+                          label={t('INVOICE.CREATED')}
+                        />
+                      );
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Controller
                     disabled={!isEditMode}
-                    name="dueDate"
+                    name="validUntil"
                     control={control}
-                    render={({ field }) => (
-                      <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
-                    )}
+                    render={({ field }) => {
+                      console.log('validUntil', field);
+                      return (
+                        <DatePicker
+                          {...field}
+                          value={field.value ? parseISO(field.value) : null}
+                          onChange={(date: any) =>
+                            field.onChange(date.toISOString())
+                          }
+                          label={t('INVOICE.VALID_UNTIL')}
+                        />
+                      );
+                    }}
                   />
                 </Grid>
               </Grid>
