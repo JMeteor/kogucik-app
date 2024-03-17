@@ -11,12 +11,13 @@ import { StyledFieldset } from './StyledFieldset.tsx';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import { useTranslation } from 'react-i18next';
 import type { Invoice } from '../types/Invoice.ts';
+import { NewInvoice } from '../types/NewInvoice.ts';
 
 interface OrderLinesFormProps {
   isEditMode?: boolean;
-  control: Control<Invoice>;
-  register: UseFormRegister<Invoice>;
-  errors: FieldErrors<Invoice>;
+  control: Control<Invoice | NewInvoice>;
+  register: UseFormRegister<Invoice | NewInvoice>;
+  errors: FieldErrors<Invoice | NewInvoice>;
 }
 
 export function OrderLinesForm({
@@ -38,7 +39,7 @@ export function OrderLinesForm({
       amount: null,
       unit: '',
       tax: null,
-      price: null,
+      price: '',
     });
   };
 

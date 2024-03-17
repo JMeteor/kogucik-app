@@ -3,6 +3,7 @@ import { TextField, Typography } from '@mui/material';
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { type Invoice } from '../types/Invoice.ts';
+import { NewInvoice } from '../types/NewInvoice.ts';
 
 const StyledFieldset = styled.fieldset`
   border: none;
@@ -13,8 +14,8 @@ const StyledFieldset = styled.fieldset`
 interface BillingFormProps {
   isEditMode?: boolean;
   name: 'recipient' | 'sender';
-  register: UseFormRegister<Invoice>;
-  errors: FieldErrors<Invoice>;
+  register: UseFormRegister<Invoice | NewInvoice>;
+  errors: FieldErrors<Invoice | NewInvoice>;
 }
 
 export function BillingForm({ name, register, isEditMode }: BillingFormProps) {

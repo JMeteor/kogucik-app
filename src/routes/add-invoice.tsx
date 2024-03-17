@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type Invoice, InvoiceSchema } from '../types/Invoice.ts';
-import { type BillingDetails } from '../types/BillingDetails.ts';
 
 import {
   Alert,
@@ -25,6 +23,9 @@ import { StyledFieldset } from '../components/StyledFieldset.tsx';
 import { generateUniqueId } from '../helpers/generateId.ts';
 import { useCreateInvoice } from '../hooks/invoices.hooks.ts';
 
+import { type NewInvoice, NewInvoiceSchema } from '../types/NewInvoice.ts';
+import { type BillingDetails } from '../types/BillingDetails.ts';
+
 const todayDate = new Date().toISOString();
 
 const billingEmptyValues: BillingDetails = {
@@ -38,7 +39,7 @@ const billingEmptyValues: BillingDetails = {
   bankAccount: '',
 };
 
-const invoiceEmptyValues: Invoice = {
+const invoiceEmptyValues: NewInvoice = {
   id: undefined,
   recipient: billingEmptyValues,
   sender: billingEmptyValues,
@@ -57,7 +58,7 @@ export default function AddInvoicePage({ defaultValues = invoiceEmptyValues }) {
     formState: { errors },
     reset,
   } = useForm({
-    resolver: zodResolver(InvoiceSchema),
+    resolver: zodResolver(NewInvoiceSchema),
     mode: 'onChange',
     defaultValues,
   });
