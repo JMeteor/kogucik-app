@@ -14,7 +14,12 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { BillingForm } from '../components/BillingForm.tsx';
 import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useParams,
+  useSearchParams,
+  useNavigate,
+} from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
 import { z } from 'zod';
@@ -56,6 +61,7 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
     resolver: zodResolver(InvoiceSchema),
     defaultValues,
   });
+  const navigate = useNavigate();
 
   const updateInvoiceMutation = useUpdateInvoice();
 
@@ -65,7 +71,9 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
     await updateInvoiceMutation.mutateAsync(
       { id, data },
       {
-        onSuccess: () => {},
+        onSuccess: () => {
+          navigate(`/invoice/${id}`);
+        },
         onError: () => {},
       },
     );
