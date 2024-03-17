@@ -2,9 +2,9 @@ import { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
 import Root from './routes/root';
-import AddInvoicePage from './routes/add-invoice.tsx';
-import InvoiceListPage from './routes/invoice-list-page.tsx';
-import ViewInvoicePage from './routes/view-invoice.tsx';
+import { InvoiceList } from './routes/invoice-list.tsx';
+import { AddInvoicePage } from './routes/add-invoice.tsx';
+import { ViewInvoicePage } from './routes/view-invoice.tsx';
 
 import './App.css';
 import theme from './theme.ts';
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <InvoiceListPage /> },
+      { index: true, element: <InvoiceList /> },
       {
         path: '/add-invoice',
         element: <AddInvoicePage />,

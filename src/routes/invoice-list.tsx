@@ -24,7 +24,7 @@ import { useDeleteInvoice, useGetInvoices } from '../hooks/invoices.hooks.ts';
 import { sortInvoicesByCreationDate } from '../services/invoices/helpers/sortInvoicesByDate.ts';
 import { type OrderLine } from '../types/OrderLine.ts';
 
-function InvoiceListPage() {
+export const InvoiceList = () => {
   const { t } = useTranslation();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -133,6 +133,4 @@ function InvoiceListPage() {
       )}
     </>
   );
-}
-
-export default InvoiceListPage;
+};

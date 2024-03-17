@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import InvoicesService from '../services/invoices/invoicesService.ts';
-import { CreateInvoiceDto, UpdateInvoiceDto } from '../services/invoices/types';
 
 const INVOICE_KEY = 'invoice';
 
@@ -19,19 +18,16 @@ export const useGetInvoice = (id: string) =>
 export const useCreateInvoice = () => {
   const queryClient = useQueryClient();
 
-  return useMutation(
-    (data: CreateInvoiceDto) => InvoicesService.createInvoice(data),
-    {
-      onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
-    },
-  );
+  return useMutation((data) => InvoicesService.createInvoice(data), {
+    onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
+  });
 };
 
 export const useUpdateInvoice = () => {
   const queryClient = useQueryClient();
 
   return useMutation(
-    ({ id, data }: { id: string; data: UpdateInvoiceDto }) =>
+    ({ id, data }: { id: string; data: any }) =>
       InvoicesService.updateInvoice(id, data),
     {
       onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),

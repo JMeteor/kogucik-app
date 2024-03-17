@@ -1,67 +1,29 @@
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  Button,
-  Grid,
-  Icon,
-  TextField,
-} from '@mui/material';
+import { Alert, AlertTitle, Box } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { StyledFieldset } from '../components/StyledFieldset.tsx';
-import { Controller, useForm } from 'react-hook-form';
-import { DatePicker } from '@mui/x-date-pickers';
-import { BillingForm } from '../components/BillingForm.tsx';
-import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Link,
   useParams,
   useSearchParams,
   useNavigate,
+  Link,
 } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
 import { z } from 'zod';
 import { InvoiceSchema } from '../types/Invoice.ts';
 
-const ViewInvoicePage = () => {
+import { InvoiceForm, InvoiceFormProps } from '../components/InvoiceForm.tsx';
+import Button from '@mui/material/Button';
+import Icon from '@mui/material/Icon';
+
+export const ViewInvoicePage = () => {
+  const { t } = useTranslation();
   const { id } = z.object({ id: z.string() }).parse(useParams());
-  const { data: invoice, status } = useGetInvoice(id);
+  const { data: invoice } = useGetInvoice(id);
+  const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
 
   const isEditMode = searchParams.get('mode') === 'edit';
-
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
-  if (status === 'error') {
-    return <div>Error...</div>;
-  }
-
-  return <ViewInvoiceForm defaultValues={invoice} isEditMode={isEditMode} />;
-};
-
-interface InvoiceFormProps {
-  defaultValues?: any;
-  isEditMode: boolean;
-}
-
-function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
-  const { t } = useTranslation();
-  const { id } = useParams<{ id: string }>();
-  const {
-    handleSubmit,
-    register,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(InvoiceSchema),
-    defaultValues,
-  });
-  const navigate = useNavigate();
 
   const updateInvoiceMutation = useUpdateInvoice();
 
@@ -79,139 +41,103 @@ function ViewInvoiceForm({ defaultValues, isEditMode }: InvoiceFormProps) {
     );
   };
 
+  const formProps: InvoiceFormProps = {
+    defaultValues: invoice,
+    mode: isEditMode ? 'edit' : 'view',
+    resolver: InvoiceSchema,
+    onSubmit,
+    children: () => (
+      <ViewInvoiceActions
+        isEditMode={isEditMode}
+        id={id}
+        useMutation={updateInvoiceMutation}
+      />
+    ),
+  };
+
   return (
     <div>
-      <Box sx={{ m: 4 }}>
-        <h1 style={visuallyHidden}>{t('INVOICE.TITLE')}</h1>
-      </Box>
-
-      <form noValidate onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={6}>
-          <Grid item sm={6}>
-            <StyledFieldset>
-              <TextField
-                {...register('name')}
-                disabled={!isEditMode}
-                label={t('INVOICE.NAME')}
-                variant="standard"
-                required
-                fullWidth
-              />
-
-              <Grid container spacing={4} sx={{ mt: 2 }}>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    disabled={!isEditMode}
-                    name="createDate"
-                    control={control}
-                    render={({ field }) => (
-                      <DatePicker {...field} label={t('INVOICE.CREATED')} />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    disabled={!isEditMode}
-                    name="dueDate"
-                    control={control}
-                    render={({ field }) => (
-                      <DatePicker {...field} label={t('INVOICE.VALID_UNTIL')} />
-                    )}
-                  />
-                </Grid>
-              </Grid>
-            </StyledFieldset>
-          </Grid>
-          <Grid item sm={6}>
-            <Box display="flex" justifyContent="flex-end" gap={1}>
-              <Button
-                variant="contained"
-                color={isEditMode ? 'error' : 'secondary'}
-                component={Link}
-                to={isEditMode ? `/invoice/${id}` : `/invoice/${id}?mode=edit`}
-              >
-                {isEditMode ? (
-                  <>
-                    <Icon sx={{ mr: 1 }}>close</Icon>
-                    {t('LABELS.DISCARD')}
-                  </>
-                ) : (
-                  <>
-                    <Icon sx={{ mr: 1 }}>edit</Icon>
-                    {t('LABELS.EDIT')}
-                  </>
-                )}
-              </Button>
-              {isEditMode && (
-                <Button color="secondary" variant="contained" type="submit">
-                  <Box display="flex">
-                    <Icon sx={{ mr: 1 }}>save</Icon>
-                    <span>
-                      {updateInvoiceMutation.isLoading
-                        ? t('LABELS.SAVING')
-                        : t('LABELS.SAVE')}
-                    </span>
-                  </Box>
-                </Button>
-              )}
-            </Box>
-            <div
-              style={{
-                position: 'absolute',
-                top: '10%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-              }}
-            >
-              {updateInvoiceMutation.isSuccess && (
-                <Alert severity="success">
-                  <AlertTitle>Success</AlertTitle>
-                  Invoice saved successfully.
-                </Alert>
-              )}
-              {updateInvoiceMutation.isError && (
-                <Alert severity="error">
-                  <AlertTitle>Error</AlertTitle>
-                  Something went wrong.
-                </Alert>
-              )}
-            </div>
-          </Grid>
-
-          <Grid item sm={6}>
-            <BillingForm
-              name={'recipient'}
-              register={register}
-              isEditMode={isEditMode}
-              errors={errors}
-            />
-          </Grid>
-
-          <Grid item sm={6}>
-            <BillingForm
-              name={'sender'}
-              register={register}
-              isEditMode={isEditMode}
-              errors={errors}
-            />
-          </Grid>
-        </Grid>
-
-        <Box
-          sx={{
-            mt: 4,
-          }}
-        >
-          <OrderLinesForm
-            control={control}
-            register={register}
-            isEditMode={isEditMode}
-            errors={errors}
-          />
+      <header>
+        <Box sx={{ m: 4 }}>
+          <h1 style={visuallyHidden}>{t('ADD_INVOICE')}</h1>
         </Box>
-      </form>
+      </header>
+
+      <ViewInvoiceAlerts useMutation={updateInvoiceMutation} />
+
+      <InvoiceForm {...formProps} />
     </div>
   );
+};
+
+interface ViewInvoiceActionsProps {
+  isEditMode: boolean;
+  id: string;
+  useMutation: any;
 }
 
-export default ViewInvoicePage;
+const ViewInvoiceActions = ({
+  isEditMode,
+  id,
+  useMutation,
+}: ViewInvoiceActionsProps) => {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Button
+        variant="contained"
+        color={isEditMode ? 'error' : 'secondary'}
+        component={Link}
+        to={isEditMode ? `/invoice/${id}` : `/invoice/${id}?mode=edit`}
+      >
+        {isEditMode ? (
+          <>
+            <Icon sx={{ mr: 1 }}>close</Icon>
+            {t('LABELS.DISCARD')}
+          </>
+        ) : (
+          <>
+            <Icon sx={{ mr: 1 }}>edit</Icon>
+            {t('LABELS.EDIT')}
+          </>
+        )}
+      </Button>
+      {isEditMode && (
+        <Button color="secondary" variant="contained" type="submit">
+          <Box display="flex">
+            <Icon sx={{ mr: 1 }}>save</Icon>
+            <span>
+              {useMutation.isLoading ? t('LABELS.SAVING') : t('LABELS.SAVE')}
+            </span>
+          </Box>
+        </Button>
+      )}
+    </>
+  );
+};
+
+const ViewInvoiceAlerts = ({ useMutation }: any) => {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: '10%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+      }}
+    >
+      {useMutation.isSuccess && (
+        <Alert severity="success">
+          <AlertTitle>Success</AlertTitle>
+          Invoice saved successfully.
+        </Alert>
+      )}
+      {useMutation.isError && (
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          Something went wrong.
+        </Alert>
+      )}
+    </div>
+  );
+};
