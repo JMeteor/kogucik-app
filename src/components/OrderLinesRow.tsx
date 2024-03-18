@@ -77,7 +77,7 @@ export function OrderLinesRow({
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.price`, { valueAsNumber: true })}
+          {...register(`items.${index}.price`)}
           disabled={!isEditMode}
           defaultValue=""
           error={Boolean(errors?.items?.[index]?.price)}

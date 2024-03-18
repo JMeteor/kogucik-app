@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
 import Root from './routes/root';
@@ -7,15 +6,14 @@ import { AddInvoicePage } from './routes/add-invoice.tsx';
 import { ViewInvoicePage } from './routes/view-invoice.tsx';
 
 import './App.css';
-import theme from './theme.ts';
 
+import theme from './theme.ts';
 import { ThemeProvider } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Loader } from './components/Loader.tsx';
 
 const router = createBrowserRouter([
   {
@@ -53,9 +51,7 @@ const queryClient = new QueryClient();
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<Loader />}>
-        <Page />
-      </Suspense>
+      <Page />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
