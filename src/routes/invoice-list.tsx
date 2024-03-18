@@ -21,26 +21,22 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { useDeleteInvoice, useGetInvoices } from '../hooks/invoices.hooks.ts';
-import { sortInvoicesByCreationDate } from '../services/invoices/helpers/sortInvoicesByDate.ts';
 import { type OrderLine } from '../types/OrderLine.ts';
 
 export const InvoiceList = () => {
   const { t } = useTranslation();
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleDelete = (id: string) => {
     setDeleteId(id);
-    setDeleteModalOpen(true);
   };
 
   const deleteInvoiceMutation = useDeleteInvoice();
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = () => {
     if (deleteId) {
       deleteInvoiceMutation.mutate(deleteId);
     }
-    setDeleteModalOpen(false);
     setDeleteId(null);
   };
 
@@ -51,8 +47,6 @@ export const InvoiceList = () => {
   };
 
   const { data: invoices, isLoading, isError } = useGetInvoices();
-
-  const sortedInvoices = invoices ? sortInvoicesByCreationDate(invoices) : [];
 
   return (
     <>
@@ -81,7 +75,7 @@ export const InvoiceList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {sortedInvoices?.map((invoice, index) => (
+              {invoices?.map((invoice, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <Link to={`/invoice/${invoice.id}`}>{invoice.name}</Link>
@@ -109,10 +103,7 @@ export const InvoiceList = () => {
                 </TableRow>
               ))}
             </TableBody>
-            <Dialog
-              open={deleteModalOpen}
-              onClose={() => setDeleteModalOpen(false)}
-            >
+            <Dialog open={deleteId !== null} onClose={() => setDeleteId(null)}>
               <DialogTitle>{t('DELETE_INVOICE.TITLE')}</DialogTitle>
               <DialogContent>
                 <DialogContentText>
@@ -120,7 +111,7 @@ export const InvoiceList = () => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setDeleteModalOpen(false)}>
+                <Button onClick={() => setDeleteId(null)}>
                   {t('LABELS.CANCEL')}
                 </Button>
                 <Button onClick={handleDeleteConfirm} autoFocus>

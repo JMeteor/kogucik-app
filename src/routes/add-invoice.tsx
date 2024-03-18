@@ -9,7 +9,7 @@ import { useCreateInvoice } from '../hooks/invoices.hooks.ts';
 
 import { type NewInvoice, NewInvoiceSchema } from '../types/NewInvoice.ts';
 import { type BillingDetails } from '../types/BillingDetails.ts';
-import { InvoiceForm, InvoiceFormProps } from '../components/InvoiceForm.tsx';
+import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
 
@@ -50,15 +50,10 @@ export const AddInvoicePage = () => {
       validUntil: parseISO(data.validUntil),
     };
 
-    await createInvoiceMutation.mutateAsync(invoice);
-  };
-
-  const formProps: InvoiceFormProps = {
-    defaultValues: invoiceEmptyValues,
-    mode: 'edit',
-    resolver: NewInvoiceSchema,
-    onSubmit,
-    children: () => <AddInvoiceActions useMutation={createInvoiceMutation} />,
+    createInvoiceMutation.mutate(invoice, {
+      onSuccess: () => {},
+      onError: () => {},
+    });
   };
 
   return (
@@ -67,7 +62,15 @@ export const AddInvoicePage = () => {
         <h1 style={visuallyHidden}>{t('ADD_INVOICE')}</h1>
       </Box>
 
-      <InvoiceForm {...formProps} />
+      <InvoiceForm
+        defaultValues={invoiceEmptyValues}
+        mode="edit"
+        resolver={NewInvoiceSchema}
+        onSubmit={onSubmit}
+        children={() => (
+          <AddInvoiceActions useMutation={createInvoiceMutation} />
+        )}
+      />
     </div>
   );
 };

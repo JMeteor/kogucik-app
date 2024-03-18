@@ -11,7 +11,7 @@ import { useGetInvoice, useUpdateInvoice } from '../hooks/invoices.hooks.ts';
 import { z } from 'zod';
 import { InvoiceSchema } from '../types/Invoice.ts';
 
-import { InvoiceForm, InvoiceFormProps } from '../components/InvoiceForm.tsx';
+import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
 
@@ -30,7 +30,7 @@ export const ViewInvoicePage = () => {
   const onSubmit = async (data: any) => {
     if (!isEditMode || !id) return;
 
-    await updateInvoiceMutation.mutateAsync(
+    updateInvoiceMutation.mutate(
       { id, data },
       {
         onSuccess: () => {
@@ -39,20 +39,6 @@ export const ViewInvoicePage = () => {
         onError: () => {},
       },
     );
-  };
-
-  const formProps: InvoiceFormProps = {
-    defaultValues: invoice,
-    mode: isEditMode ? 'edit' : 'view',
-    resolver: InvoiceSchema,
-    onSubmit,
-    children: () => (
-      <ViewInvoiceActions
-        isEditMode={isEditMode}
-        id={id}
-        useMutation={updateInvoiceMutation}
-      />
-    ),
   };
 
   return (
@@ -64,8 +50,23 @@ export const ViewInvoicePage = () => {
       </header>
 
       <ViewInvoiceAlerts useMutation={updateInvoiceMutation} />
-
-      <InvoiceForm {...formProps} />
+      {invoice ? (
+        <InvoiceForm
+          defaultValues={invoice}
+          mode={isEditMode ? 'edit' : 'view'}
+          resolver={InvoiceSchema}
+          onSubmit={onSubmit}
+          children={() => (
+            <ViewInvoiceActions
+              isEditMode={isEditMode}
+              id={id}
+              useMutation={updateInvoiceMutation}
+            />
+          )}
+        />
+      ) : (
+        <div>loading...</div>
+      )}
     </div>
   );
 };

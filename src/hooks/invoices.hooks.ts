@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import InvoicesService from '../services/invoices/invoicesService.ts';
+import { sortInvoicesByCreationDate } from '../services/invoices/helpers/sortInvoicesByDate.ts';
 
 const INVOICE_KEY = 'invoice';
 
@@ -7,6 +8,7 @@ export const useGetInvoices = () =>
   useQuery({
     queryKey: [INVOICE_KEY],
     queryFn: () => InvoicesService.fetchAllInvoices(),
+    select: (invoices) => sortInvoicesByCreationDate(invoices),
   });
 
 export const useGetInvoice = (id: string) =>
