@@ -58,10 +58,10 @@ export const InvoiceForm = ({
                 <Grid item xs={12} sm={6}>
                   <Controller
                     disabled={!isEditMode}
-                    name="createAt"
+                    name="createdAt"
                     control={control}
                     render={({ field }) => {
-                      console.log('createAt', field);
+                      console.log('createdAt', field);
                       return (
                         <DatePicker
                           {...field}
