@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
 import { TextField, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { type Invoice } from '../types/Invoice.ts';
+import { NewInvoice } from '../types/NewInvoice.ts';
 
 const StyledFieldset = styled.fieldset`
   border: none;
@@ -11,17 +13,12 @@ const StyledFieldset = styled.fieldset`
 
 interface BillingFormProps {
   isEditMode?: boolean;
-  name: string;
-  register: ReturnType<typeof useForm>['register'];
-  errors: Record<string, any>;
+  name: 'recipient' | 'sender';
+  register: UseFormRegister<Invoice | NewInvoice>;
+  errors: FieldErrors<Invoice | NewInvoice>;
 }
 
-export function BillingForm({
-  name,
-  register,
-  isEditMode,
-  errors,
-}: BillingFormProps) {
+export function BillingForm({ name, register, isEditMode }: BillingFormProps) {
   const { t } = useTranslation();
 
   return (
@@ -38,9 +35,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.COMPANY_NAME')}
         variant="standard"
         fullWidth
-        required
-        error={Boolean(errors && errors[`${name}.companyName`])}
-        helperText={errors?.[`${name}.companyName`]?.message}
         sx={{ mb: 1 }}
       />
 
@@ -50,7 +44,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.CITY')}
         variant="standard"
         fullWidth
-        required
         sx={{ mb: 1 }}
       />
 
@@ -60,7 +53,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.STREET')}
         variant="standard"
         fullWidth
-        required
         sx={{ mb: 1 }}
       />
 
@@ -70,7 +62,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.POSTCODE')}
         variant="standard"
         fullWidth
-        required
         sx={{ mb: 1 }}
       />
 
@@ -80,7 +71,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.NIP')}
         variant="standard"
         fullWidth
-        required
         inputProps={{ pattern: '[0-9]{10}' }}
         sx={{ mb: 1 }}
       />
@@ -100,7 +90,6 @@ export function BillingForm({
         label={t('CONTACT_FORM.EMAIL')}
         variant="standard"
         fullWidth
-        required
         type="email"
         sx={{ mb: 1 }}
       />
@@ -110,7 +99,6 @@ export function BillingForm({
         disabled={!isEditMode}
         label={t('CONTACT_FORM.BANK_ACCOUNT')}
         variant="standard"
-        required
         fullWidth
       />
     </StyledFieldset>

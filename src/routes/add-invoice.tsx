@@ -1,57 +1,59 @@
-import { Controller, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Box } from '@mui/material';
 
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  Button,
-  Grid,
-  Icon,
-  TextField,
-} from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { DatePicker } from '@mui/x-date-pickers';
-import { BillingForm } from '../components/BillingForm.tsx';
-import { OrderLinesForm } from '../components/OrderLinesForm.tsx';
-import { StyledFieldset } from '../components/StyledFieldset.tsx';
-import InvoiceSchema from '../types/Invoice.ts';
+import { parseISO } from 'date-fns';
+
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
-import InvoicesService from '../services/invoices/invoicesService.ts';
 import { generateUniqueId } from '../helpers/generateId.ts';
-import dayjs from 'dayjs';
+import { useCreateInvoice } from '../hooks/invoices.hooks.ts';
 
-export default function AddInvoice() {
+import { type NewInvoice, NewInvoiceSchema } from '../types/NewInvoice.ts';
+import { type BillingDetails } from '../types/BillingDetails.ts';
+import { InvoiceForm } from '../components/InvoiceForm.tsx';
+import Button from '@mui/material/Button';
+import Icon from '@mui/material/Icon';
+
+const todayDate = new Date().toISOString();
+
+const billingEmptyValues: BillingDetails = {
+  companyName: '',
+  city: '',
+  street: '',
+  postcode: '',
+  nip: '',
+  phone: '',
+  email: '',
+  bankAccount: '',
+};
+
+const invoiceEmptyValues: NewInvoice = {
+  id: undefined,
+  recipient: billingEmptyValues,
+  sender: billingEmptyValues,
+  items: [],
+  name: '',
+  createdAt: todayDate,
+  validUntil: null,
+};
+
+export const AddInvoicePage = () => {
   const { t } = useTranslation();
-  const {
-    handleSubmit,
-    register,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(InvoiceSchema),
-  });
-
-  // idle, loading, success, error
-  const [status, setStatus] = useState('idle');
-
-  console.log(errors);
+  const createInvoiceMutation = useCreateInvoice();
 
   const onSubmit = async (data: any) => {
     const id = generateUniqueId();
-    const invoice = { ...data, id };
 
-    setStatus('loading');
-    console.log('Saving invoice...', invoice);
+    const invoice = {
+      ...data,
+      id,
+      createdAt: parseISO(data.createdAt),
+      validUntil: parseISO(data.validUntil),
+    };
 
-    try {
-      await InvoicesService.createInvoice(invoice);
-      setStatus('success');
-    } catch (error) {
-      console.log(error);
-      setStatus('error');
-    }
+    createInvoiceMutation.mutate(invoice, {
+      onSuccess: () => {},
+      onError: () => {},
+    });
   };
 
   return (
@@ -60,134 +62,30 @@ export default function AddInvoice() {
         <h1 style={visuallyHidden}>{t('ADD_INVOICE')}</h1>
       </Box>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={6}>
-          <Grid item sm={6}>
-            <StyledFieldset>
-              <TextField
-                {...register('name')}
-                label={t('INVOICE.NAME')}
-                variant="standard"
-                required
-                fullWidth
-              />
-
-              <Grid container spacing={4} sx={{ mt: 2 }}>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="createdAt"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label={t('INVOICE.CREATED')}
-                        onChange={(date: Date | null) => {
-                          field.onChange(
-                            date ? dayjs(date).format('YYYY-MM-DD') : null,
-                          );
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Controller
-                    name="validUntil"
-                    control={control}
-                    defaultValue={null}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        label={t('INVOICE.VALID_UNTIL')}
-                        onChange={(date: Date | null) => {
-                          field.onChange(
-                            date ? dayjs(date).format('YYYY-MM-DD') : null,
-                          );
-                        }}
-                      />
-                    )}
-                    rules={{ required: true }}
-                  />
-                </Grid>
-              </Grid>
-            </StyledFieldset>
-          </Grid>
-          <Grid item sm={6}>
-            <Box
-              display="flex"
-              justifyContent="flex-start"
-              flexDirection="row-reverse"
-              gap={1}
-            >
-              <Button color="secondary" variant="contained" type="submit">
-                <Box display="flex">
-                  <Icon sx={{ mr: 1 }}>save</Icon>
-                  <span>
-                    {status === 'loading'
-                      ? t('LABELS.SAVING')
-                      : t('LABELS.SAVE')}
-                  </span>
-                </Box>
-              </Button>
-              <Button color="secondary" variant="contained" href="/">
-                <span>{t('LABELS.CANCEL')}</span>
-              </Button>
-            </Box>
-            <div
-              style={{
-                position: 'absolute',
-                top: '10%',
-                left: '50%',
-                transform: 'translateX(-50%)',
-              }}
-            >
-              {status === 'success' && (
-                <Alert severity="success">
-                  <AlertTitle>Success</AlertTitle>
-                  Invoice saved successfully.
-                </Alert>
-              )}
-              {status === 'error' && (
-                <Alert severity="error">
-                  <AlertTitle>Error</AlertTitle>
-                  Something went wrong.
-                </Alert>
-              )}
-            </div>
-          </Grid>
-
-          <Grid item sm={6}>
-            <BillingForm
-              name={'recipient'}
-              register={register}
-              isEditMode={true}
-              errors={errors}
-            />
-          </Grid>
-
-          <Grid item sm={6}>
-            <BillingForm
-              name={'sender'}
-              register={register}
-              isEditMode={true}
-              errors={errors}
-            />
-          </Grid>
-        </Grid>
-
-        <Box
-          sx={{
-            mt: 4,
-          }}
-        >
-          <OrderLinesForm
-            control={control}
-            register={register}
-            isEditMode={true}
-          />
-        </Box>
-      </form>
+      <InvoiceForm
+        defaultValues={invoiceEmptyValues}
+        mode="edit"
+        resolver={NewInvoiceSchema}
+        onSubmit={onSubmit}
+        children={() => (
+          <AddInvoiceActions useMutation={createInvoiceMutation} />
+        )}
+      />
     </div>
   );
-}
+};
+
+const AddInvoiceActions = ({ useMutation }: any) => {
+  const { t } = useTranslation();
+
+  return (
+    <Button color="secondary" variant="contained" type="submit">
+      <Box display="flex">
+        <Icon sx={{ mr: 1 }}>save</Icon>
+        <span>
+          {useMutation.isLoading ? t('LABELS.SAVING') : t('LABELS.SAVE')}
+        </span>
+      </Box>
+    </Button>
+  );
+};

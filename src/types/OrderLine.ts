@@ -1,13 +1,12 @@
 import { z } from 'zod';
 
-const OrderLineSchema = z.object({
+export const OrderLineSchema = z.object({
   id: z.string(),
   name: z.string(),
-  amount: z.number(),
+  amount: z.number().nullable(),
   unit: z.string(),
-  tax: z.number(),
-  price: z.number(),
+  tax: z.number().nullable(),
+  price: z.string(),
 });
 
 export type OrderLine = z.infer<typeof OrderLineSchema>;
-export default OrderLineSchema;

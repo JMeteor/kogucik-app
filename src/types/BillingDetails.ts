@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const BillingDetailsSchema = z.object({
+export const BillingDetailsSchema = z.object({
   companyName: z.string(),
   city: z.string(),
   street: z.string(),
@@ -12,4 +12,3 @@ const BillingDetailsSchema = z.object({
 });
 
 export type BillingDetails = z.infer<typeof BillingDetailsSchema>;
-export default BillingDetailsSchema;

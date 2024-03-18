@@ -1,12 +1,15 @@
 import { Box, Icon, IconButton, TextField } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { type FieldErrors, type UseFormRegister } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import type { Invoice } from '../types/Invoice.ts';
+import { NewInvoice } from '../types/NewInvoice.ts';
 
 interface OrderLinesRowProps {
-  register: ReturnType<typeof useForm>['register'];
+  register: UseFormRegister<Invoice | NewInvoice>;
   remove: (index: number) => void;
   index: number;
   isEditMode?: boolean;
+  errors: FieldErrors<Invoice | NewInvoice>;
 }
 
 export function OrderLinesRow({
@@ -14,6 +17,7 @@ export function OrderLinesRow({
   remove,
   index,
   isEditMode,
+  errors,
 }: OrderLinesRowProps) {
   const { t } = useTranslation();
 
@@ -32,6 +36,7 @@ export function OrderLinesRow({
           {...register(`items.${index}.name`)}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors?.items?.[index]?.name)}
           label={t('ORDER_LINE.NAME')}
           variant="standard"
           fullWidth
@@ -39,12 +44,12 @@ export function OrderLinesRow({
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.amount`)}
+          {...register(`items.${index}.amount`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors?.items?.[index]?.amount)}
           label={t('ORDER_LINE.AMOUNT')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>
@@ -53,20 +58,20 @@ export function OrderLinesRow({
           {...register(`items.${index}.unit`)}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors?.items?.[index]?.unit)}
           label={t('ORDER_LINE.UNIT')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>
       <Box sx={{ flexGrow: 2, flexBasis: 0 }}>
         <TextField
-          {...register(`items.${index}.tax`)}
+          {...register(`items.${index}.tax`, { valueAsNumber: true })}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors?.items?.[index]?.tax)}
           label={t('ORDER_LINE.TAX')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>
@@ -75,9 +80,9 @@ export function OrderLinesRow({
           {...register(`items.${index}.price`)}
           disabled={!isEditMode}
           defaultValue=""
+          error={Boolean(errors?.items?.[index]?.price)}
           label={t('ORDER_LINE.PRICE')}
           variant="standard"
-          required
           fullWidth
         />
       </Box>

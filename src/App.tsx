@@ -1,20 +1,19 @@
-import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
 import Root from './routes/root';
+import { InvoiceList } from './routes/invoice-list.tsx';
+import { AddInvoicePage } from './routes/add-invoice.tsx';
+import { ViewInvoicePage } from './routes/view-invoice.tsx';
+
+import './App.css';
 
 import theme from './theme.ts';
-import Index from './routes';
-
-import AddInvoice from './routes/add-invoice.tsx';
 import { ThemeProvider } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { Suspense } from 'react';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import EditInvoicePage from './routes/edit-invoice.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,18 +21,14 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <Index /> },
+      { index: true, element: <InvoiceList /> },
       {
         path: '/add-invoice',
-        element: <AddInvoice />,
+        element: <AddInvoicePage />,
       },
       {
         path: '/invoice/:id',
-        element: <EditInvoicePage isEditMode={false} />,
-      },
-      {
-        path: '/invoice/:id/edit',
-        element: <EditInvoicePage isEditMode={true} />,
+        element: <ViewInvoicePage />,
       },
     ],
   },
@@ -42,7 +37,7 @@ const router = createBrowserRouter([
 function Page() {
   return (
     <div className="app">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
           <RouterProvider router={router} />
         </ThemeProvider>
@@ -51,20 +46,12 @@ function Page() {
   );
 }
 
-const Loader = () => (
-  <div className="app">
-    <div>loading...</div>
-  </div>
-);
-
 const queryClient = new QueryClient();
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<Loader />}>
-        <Page />
-      </Suspense>
+      <Page />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

@@ -1,15 +1,15 @@
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import InvoicesService from '../services/invoices/invoicesService.ts';
-import { CreateInvoiceDto, UpdateInvoiceDto } from '../services/invoices/types';
+import { sortInvoicesByCreationDate } from '../services/invoices/helpers/sortInvoicesByDate.ts';
 
 const INVOICE_KEY = 'invoice';
 
-export const useGetInvoices = () => {
+export const useGetInvoices = () =>
   useQuery({
     queryKey: [INVOICE_KEY],
     queryFn: () => InvoicesService.fetchAllInvoices(),
+    select: (invoices) => sortInvoicesByCreationDate(invoices),
   });
-};
 
 export const useGetInvoice = (id: string) =>
   useQuery({
@@ -17,13 +17,30 @@ export const useGetInvoice = (id: string) =>
     queryFn: () => InvoicesService.fetchInvoiceById(id),
   });
 
-export const useCreateInvoice = () =>
-  useMutation((data: CreateInvoiceDto) => InvoicesService.createInvoice(data));
+export const useCreateInvoice = () => {
+  const queryClient = useQueryClient();
 
-export const useUpdateInvoice = () =>
-  useMutation(({ id, data }: { id: string; data: UpdateInvoiceDto }) =>
-    InvoicesService.updateInvoice(id, data),
+  return useMutation((data) => InvoicesService.createInvoice(data), {
+    onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
+  });
+};
+
+export const useUpdateInvoice = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    ({ id, data }: { id: string; data: any }) =>
+      InvoicesService.updateInvoice(id, data),
+    {
+      onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
+    },
   );
+};
 
-export const useDeleteInvoice = () =>
-  useMutation((id: string) => InvoicesService.deleteInvoice(id));
+export const useDeleteInvoice = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation((id: string) => InvoicesService.deleteInvoice(id), {
+    onSuccess: () => queryClient.invalidateQueries([INVOICE_KEY]),
+  });
+};
