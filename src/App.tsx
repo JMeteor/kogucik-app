@@ -15,6 +15,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { Loader } from './components/Loader.tsx';
 
 const router = createBrowserRouter([
   {
@@ -46,12 +47,6 @@ function Page() {
     </div>
   );
 }
-
-const Loader = () => (
-  <div className="app">
-    <div>loading...</div>
-  </div>
-);
 
 const queryClient = new QueryClient();
 

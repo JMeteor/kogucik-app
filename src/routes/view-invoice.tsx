@@ -14,6 +14,7 @@ import { InvoiceSchema } from '../types/Invoice.ts';
 import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
+import { Loader } from '../components/Loader.tsx';
 
 export const ViewInvoicePage = () => {
   const { t } = useTranslation();
@@ -65,7 +66,7 @@ export const ViewInvoicePage = () => {
           )}
         />
       ) : (
-        <div>loading...</div>
+        <Loader />
       )}
     </div>
   );
