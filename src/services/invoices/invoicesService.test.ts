@@ -1,15 +1,10 @@
-import { test, expect, describe, beforeAll, afterEach, afterAll } from 'vitest';
+import { test, expect, describe } from 'vitest';
 import InvoicesService from './invoicesService.ts';
-import { server } from '../../mocks/server.ts';
 import { mockInvoice } from '../../mocks/invoice.mock.ts';
 
 const MOCK_INVOICE = mockInvoice;
 
 describe('invoicesService', () => {
-  beforeAll(() => server.listen());
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-
   describe('fetchAllInvoices', () => {
     test('returns invoices data when invoice exists', async () => {
       const data = await InvoicesService.fetchAllInvoices();

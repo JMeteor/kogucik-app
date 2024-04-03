@@ -3,12 +3,17 @@ import { render, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
+const queryClient = new QueryClient();
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <ThemeProvider theme="light">{children}</ThemeProvider>
-    </LocalizationProvider>
+    <QueryClientProvider client={queryClient}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ThemeProvider theme="light">{children}</ThemeProvider>
+      </LocalizationProvider>
+    </QueryClientProvider>
   );
 };
 
