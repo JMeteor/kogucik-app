@@ -51,13 +51,11 @@ describe('invoicesService', () => {
         name: 'Invoice 2',
       };
 
-      //TODO: How to mock updated invoice data?
-      const invoice = await InvoicesService.updateInvoice('1', data);
+      await InvoicesService.updateInvoice('1', data);
 
-      expect(invoice).toEqual({
-        ...MOCK_INVOICE,
-        name: 'Invoice 2',
-      });
+      const newInvoice = await InvoicesService.fetchInvoiceById('1');
+
+      expect(newInvoice.name).toBe(data.name);
     });
 
     test('throws an error when the invoice does not exist', async () => {

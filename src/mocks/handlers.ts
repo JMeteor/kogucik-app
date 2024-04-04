@@ -29,16 +29,15 @@ export const handlers = [
   http.post(`${API_URL}/invoices`, async ({ request }) => {
     console.log('Captured a "POST /invoices" request');
     const newInvoice = await request.json();
-
     allInvoices.set((newInvoice as Invoice).id, newInvoice);
+
 
     return HttpResponse.json(newInvoice, { status: 201 });
   }),
 
-  http.put(`${API_URL}/invoices/:id`, ({ params }) => {
+  http.put(`${API_URL}/invoices/:id`, async ({ params, request }) => {
     console.log(`Captured a "PUT /invoices/${params.id}" request`);
-
-    const updatedInvoice = allInvoices.get(params.id);
+    const updatedInvoice = await request.json();
 
     if (updatedInvoice) {
       allInvoices.set(params.id, updatedInvoice);
