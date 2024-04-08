@@ -17,7 +17,6 @@
     "@hookform/resolvers": "^3.3.4",
     "@mui/material": "^5.15.2",
     "@mui/x-date-pickers": "^6.19.0",
-    "@testing-library/jest-dom": "^6.4.2",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.5",
     "i18next": "^23.8.3",
@@ -34,6 +33,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",

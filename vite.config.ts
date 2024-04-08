@@ -12,7 +12,7 @@ export default ({ mode }) => {
     },
     plugins: [react()],
     test: {
-      environment: 'happy-dom',
+      environment: 'happy-dom', // jsdom
       setupFiles: ['./src/test/setup.ts'],
     },
     css: {

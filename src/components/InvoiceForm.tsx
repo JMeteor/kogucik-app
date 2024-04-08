@@ -61,7 +61,6 @@ export const InvoiceForm = ({
                     name="createdAt"
                     control={control}
                     render={({ field }) => {
-                      console.log('createdAt', field);
                       return (
                         <DatePicker
                           {...field}
@@ -81,7 +80,6 @@ export const InvoiceForm = ({
                     name="validUntil"
                     control={control}
                     render={({ field }) => {
-                      console.log('validUntil', field);
                       return (
                         <DatePicker
                           {...field}

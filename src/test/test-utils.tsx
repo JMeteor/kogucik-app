@@ -4,9 +4,9 @@ import { ThemeProvider } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import theme from "../theme.ts";
+import theme from '../theme.ts';
 import '../i18n';
-import {BrowserRouter} from "react-router-dom";
+import { BrowserRouter } from 'react-router-dom';
 
 const queryClient = new QueryClient();
 
@@ -15,9 +15,7 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
     <QueryClientProvider client={queryClient}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-            <BrowserRouter>
-                {children}
-            </BrowserRouter>
+          <BrowserRouter>{children}</BrowserRouter>
         </ThemeProvider>
       </LocalizationProvider>
     </QueryClientProvider>

@@ -10,12 +10,12 @@ allInvoices.set(mockInvoice.id, mockInvoice);
 
 export const handlers = [
   http.get(`${API_URL}/invoices`, () => {
-    console.log('Captured a "GET /invoices" request');
+    // console.log('Captured a "GET /invoices" request');
     return HttpResponse.json(Array.from(allInvoices.values()));
   }),
 
   http.get(`${API_URL}/invoices/:id`, ({ params }) => {
-    console.log(`Captured a "GET /invoices/${params.id}" request`);
+    // console.log(`Captured a "GET /invoices/${params.id}" request`);
 
     const invoice = allInvoices.get(params.id);
 
@@ -27,16 +27,15 @@ export const handlers = [
   }),
 
   http.post(`${API_URL}/invoices`, async ({ request }) => {
-    console.log('Captured a "POST /invoices" request');
+    // console.log('Captured a "POST /invoices" request');
     const newInvoice = await request.json();
     allInvoices.set((newInvoice as Invoice).id, newInvoice);
-
 
     return HttpResponse.json(newInvoice, { status: 201 });
   }),
 
   http.put(`${API_URL}/invoices/:id`, async ({ params, request }) => {
-    console.log(`Captured a "PUT /invoices/${params.id}" request`);
+    // console.log(`Captured a "PUT /invoices/${params.id}" request`);
     const updatedInvoice = await request.json();
 
     if (updatedInvoice) {
@@ -48,7 +47,7 @@ export const handlers = [
   }),
 
   http.delete(`${API_URL}/invoices/:id`, ({ params }) => {
-    console.log(`Captured a "DELETE /invoices/${params.id}" request`);
+    // console.log(`Captured a "DELETE /invoices/${params.id}" request`);
 
     const deletedInvoice = allInvoices.get(params.id);
 

@@ -93,3 +93,14 @@ TODO
 * zamockować MOCK SERVICE WORKEREM: pobieranie listy, invoice pojedynczego, edycja i kasowanie
 * mockowanie bazy danych https://github.com/mswjs/data
 * błędy serwera, błędy walidacji
+
+Spotkanie 4.04
+* wywalić testy invoiceService
+* w AppTsx podpiać  router tak żeby używał tylko potrzebnego. https://testing-library.
+  com/docs/example-react-router/#reducing-boilerplate 
+  * Są dwa sposoby: 1. TODO, 2. 
+  * InvoiceList nie potrzebuje router, ale InvoicePage już tak
+
+* Faker - https://fakerjs.dev/
+* Vitest UI - https://vitest.dev/guide/ui
+* 
