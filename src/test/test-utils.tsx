@@ -1,16 +1,17 @@
-import React, { ReactElement } from 'react';
+import { ReactElement, ReactNode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { render, RenderOptions } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { QueryClient, QueryClientProvider } from 'react-query';
 import theme from '../theme.ts';
 import '../i18n';
-import { BrowserRouter } from 'react-router-dom';
 
 const queryClient = new QueryClient();
 
-const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+const AllTheProviders = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -27,5 +28,14 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'>,
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
+const renderWithRouter = (ui: JSX.Element, { route = '/' } = {}) => {
+  window.history.pushState({}, 'Test page', route);
+
+  return {
+    user: userEvent.setup(),
+    ...customRender(ui),
+  };
+};
+
 export * from '@testing-library/react';
-export { customRender as render };
+export { customRender as render, renderWithRouter };

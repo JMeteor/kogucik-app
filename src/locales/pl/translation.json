@@ -12,7 +12,7 @@
     "SENDER": "Wystawca"
   },
   "ORDER_LINE": {
-    "ITEM": "Przedmiot",
+    "ITEMS": "Przedmioty",
     "ADD_ITEM": "Dodaj przedmiot",
     "NAME": "Nazwa",
     "AMOUNT": "Ilość",

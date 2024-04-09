@@ -12,6 +12,7 @@ import { type BillingDetails } from '../types/BillingDetails.ts';
 import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
+import { useNavigate } from 'react-router-dom';
 
 const todayDate = new Date().toISOString();
 
@@ -39,6 +40,7 @@ const invoiceEmptyValues: NewInvoice = {
 export const AddInvoicePage = () => {
   const { t } = useTranslation();
   const createInvoiceMutation = useCreateInvoice();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
     const id = generateUniqueId();
@@ -51,7 +53,9 @@ export const AddInvoicePage = () => {
     };
 
     createInvoiceMutation.mutate(invoice, {
-      onSuccess: () => {},
+      onSuccess: () => {
+        navigate(`/invoice/${invoice.id}`);
+      },
       onError: () => {},
     });
   };

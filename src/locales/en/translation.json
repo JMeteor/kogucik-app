@@ -12,7 +12,7 @@
     "SENDER": "Sender"
   },
   "ORDER_LINE": {
-    "ITEM": "Item",
+    "ITEMS": "Items",
     "ADD_ITEM": "Add item",
     "NAME": "Name",
     "AMOUNT": "Amount",
