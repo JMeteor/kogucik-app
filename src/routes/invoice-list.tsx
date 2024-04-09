@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 
 import { useDeleteInvoice, useGetInvoices } from '../hooks/invoices.hooks.ts';
 import { type OrderLine } from '../types/OrderLine.ts';
+import { format, parseISO } from 'date-fns';
 
 export const InvoiceList = () => {
   const { t } = useTranslation();
@@ -42,7 +43,9 @@ export const InvoiceList = () => {
 
   const totalAmount = (items: OrderLine[]) => {
     return items.reduce((acc, item) => {
-      return acc + (item.amount || 0);
+      const price = parseFloat(item.price || '0');
+      const amount = item.amount || 0;
+      return acc + amount * price;
     }, 0);
   };
 
@@ -80,8 +83,12 @@ export const InvoiceList = () => {
                   <TableCell>
                     <Link to={`/invoice/${invoice.id}`}>{invoice.name}</Link>
                   </TableCell>
-                  <TableCell align="right">{invoice.createdAt}</TableCell>
-                  <TableCell align="right">{invoice.validUntil}</TableCell>
+                  <TableCell align="right">
+                    {format(parseISO(invoice.createdAt), 'MM/dd/yyyy')}
+                  </TableCell>
+                  <TableCell align="right">
+                    {format(parseISO(invoice.validUntil), 'MM/dd/yyyy')}
+                  </TableCell>
                   <TableCell align="right">
                     {totalAmount(invoice.items)}
                   </TableCell>
