@@ -25,17 +25,17 @@ const AllTheProviders = ({ children }: { children: ReactNode }) => {
 
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>,
-) => render(ui, { wrapper: AllTheProviders, ...options });
-
-const renderWithRouter = (ui: JSX.Element, { route = '/' } = {}) => {
+  {
+    route = '/',
+    ...options
+  }: Omit<RenderOptions, 'wrapper'> & { route?: string } = {},
+) => {
   window.history.pushState({}, 'Test page', route);
-
   return {
     user: userEvent.setup(),
-    ...customRender(ui),
+    ...render(ui, { wrapper: AllTheProviders, ...options }),
   };
 };
 
 export * from '@testing-library/react';
-export { customRender as render, renderWithRouter };
+export { customRender as render };

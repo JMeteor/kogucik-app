@@ -1,4 +1,4 @@
-import { renderWithRouter } from './../test/test-utils.tsx';
+import { render } from './../test/test-utils.tsx';
 import { it, expect, describe } from 'vitest';
 import { AddInvoicePage } from './add-invoice';
 import { within } from '@testing-library/react';
@@ -7,9 +7,7 @@ import { addDays, format } from 'date-fns';
 
 describe('AddInvoicePage', () => {
   const user = userEvent.setup();
-  const { getByRole, getByText, getByLabelText } = renderWithRouter(
-    <AddInvoicePage />,
-  );
+  const { getByRole, getByText, getByLabelText } = render(<AddInvoicePage />);
 
   it('renders page title correctly', () => {
     const title = getByText(/Add Invoice/i);
