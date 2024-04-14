@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './error-page';
 import Root from './routes/root';
-import { InvoiceList } from './routes/invoice-list.tsx';
-import { AddInvoicePage } from './routes/add-invoice.tsx';
-import { ViewInvoicePage } from './routes/view-invoice.tsx';
+import { InvoiceListPage } from './routes/invoice-list';
+import { AddInvoicePage } from './routes/add-invoice';
+import { ViewInvoicePage } from './routes/view-invoice';
 
 import './App.css';
 
@@ -15,13 +15,13 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-const router = createBrowserRouter([
+export const routes = [
   {
     path: '/',
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <InvoiceList /> },
+      { index: true, element: <InvoiceListPage /> },
       {
         path: '/add-invoice',
         element: <AddInvoicePage />,
@@ -32,7 +32,9 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+export const router = createBrowserRouter(routes);
 
 function Page() {
   return (

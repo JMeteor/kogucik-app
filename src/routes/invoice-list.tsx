@@ -17,14 +17,13 @@ import {
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
 import { Link } from 'react-router-dom';
 
 import { useDeleteInvoice, useGetInvoices } from '../hooks/invoices.hooks.ts';
 import { type OrderLine } from '../types/OrderLine.ts';
 import { format, parseISO } from 'date-fns';
 
-export const InvoiceList = () => {
+export const InvoiceListPage = () => {
   const { t } = useTranslation();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 

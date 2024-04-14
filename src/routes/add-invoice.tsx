@@ -59,7 +59,7 @@ export const AddInvoicePage = () => {
 
     createInvoiceMutation.mutate(invoice, {
       onSuccess: () => {
-        navigate(`/invoice/${invoice.id}`);
+        navigate('/');
       },
       onError: () => {},
     });

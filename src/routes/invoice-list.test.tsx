@@ -1,16 +1,17 @@
-import { describe, test, expect } from 'vitest';
-import {render} from "../test/test-utils.tsx";
-import {InvoiceList} from "./invoice-list.tsx";
-import {screen} from "@testing-library/react";
-import {mockInvoice} from "../mocks/invoice.mock.ts";
-import {Route, Routes} from "react-router-dom";
+import { describe, expect, it } from 'vitest';
+import { renderWithRouter } from '../test/test-utils.tsx';
+import { screen, waitFor } from '@testing-library/react';
+import App from '../App.tsx';
 
-describe('InvoiceList', () => {
-    test('should display list', async () => {
-        render(<Routes>
-            <Route path='/' element={<InvoiceList />} />
-        </Routes>);
+describe('InvoiceListPage', () => {
+  renderWithRouter(<App />);
 
-       expect(await screen.findByText(mockInvoice.name)).toBeInTheDocument()
-    });
-})
+  it('renders page title correctly', async () => {
+    await waitFor(
+      async () => {
+        expect(await screen.findByText(/Invoice 1/i)).toBeInTheDocument();
+      },
+      { timeout: 2000 },
+    );
+  });
+});

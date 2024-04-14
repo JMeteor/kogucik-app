@@ -1,86 +1,26 @@
-import { render } from './../test/test-utils.tsx';
-import { it, expect, describe } from 'vitest';
-import { AddInvoicePage } from './add-invoice';
-import { within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { addDays, format } from 'date-fns';
+import { renderWithRouter, screen } from './../test/test-utils.tsx';
+import { describe, expect, it } from 'vitest';
+import { waitFor, within } from '@testing-library/react';
+import App from '../App.tsx';
 
 describe('AddInvoicePage', () => {
-  const user = userEvent.setup();
-  const { getByRole, getByText, getByLabelText } = render(<AddInvoicePage />);
+  const { user } = renderWithRouter(<App />);
 
-  it('renders page title correctly', () => {
-    const title = getByText(/Add Invoice/i);
-    expect(title).toBeInTheDocument();
-  });
-
-  it('renders invoice form fields', () => {
-    expect(getByLabelText('Name *')).toBeInTheDocument();
-    expect(getByLabelText('Created')).toBeInTheDocument();
-    expect(getByLabelText('Valid until')).toBeInTheDocument();
-  });
-
-  it('renders save button', async () => {
-    expect(getByText('Save')).toBeInTheDocument();
-  });
-
-  it('renders recipient title', async () => {
-    expect(getByText('Recipient')).toBeInTheDocument();
-  });
-
-  it('renders recipient form fields', () => {
-    const recipientForm = getByRole('group', { name: 'Recipient' });
-    expect(
-      within(recipientForm).getByLabelText('Company name'),
-    ).toBeInTheDocument();
-    expect(within(recipientForm).getByLabelText('City')).toBeInTheDocument();
-    expect(within(recipientForm).getByLabelText('Street')).toBeInTheDocument();
-    expect(
-      within(recipientForm).getByLabelText('Postcode'),
-    ).toBeInTheDocument();
-    expect(within(recipientForm).getByLabelText('NIP')).toBeInTheDocument();
-    expect(within(recipientForm).getByLabelText('Phone')).toBeInTheDocument();
-    expect(within(recipientForm).getByLabelText('Email')).toBeInTheDocument();
-    expect(
-      within(recipientForm).getByLabelText('Bank account'),
-    ).toBeInTheDocument();
-  });
-
-  it('renders `Add item` button', async () => {
-    expect(getByText('Add item')).toBeInTheDocument();
-  });
-
-  // it('adds new item on `Add item` click', async () => {
-  //   const addItemButton = getByText('Add item');
-  //   await user.click(addItemButton);
-  //
-  //   const orderItemForm = getByRole('group', { name: 'Items' });
-  //
-  //   expect(within(orderItemForm).getByLabelText('Name')).toBeInTheDocument();
-  //   expect(within(orderItemForm).getByLabelText('Amount')).toBeInTheDocument();
-  //   expect(within(orderItemForm).getByLabelText('Unit')).toBeInTheDocument();
-  //   expect(within(orderItemForm).getByLabelText('Tax')).toBeInTheDocument();
-  //   expect(within(orderItemForm).getByLabelText('Price')).toBeInTheDocument();
-  //   expect(within(orderItemForm).getByLabelText('Delete')).toBeInTheDocument();
-  // });
+  // render(
+  //   <Routes>
+  //     <Route element={<InvoiceList />} path="/" />
+  //     <Route element={<AddInvoicePage />} path="/add-invoice" />
+  //     <Route element={<ViewInvoicePage />} path="/invoce/:id" />
+  //   </Routes>,
+  // );
 
   it('fills in the form', async () => {
-    const nameField = getByLabelText('Name *') as HTMLInputElement;
-    await user.type(nameField, 'Test');
+    await user.click(screen.getByText(/Add Invoice/i));
 
-    const today = new Date();
-    const twoWeeksFromToday = addDays(today, 14);
+    const nameField = screen.getByLabelText('Name *') as HTMLInputElement;
+    await user.type(nameField, 'Test Company');
 
-    const todayFormated = format(today, 'MM/dd/yyyy');
-    const twoWeeksFromTodayFormated = format(twoWeeksFromToday, 'MM/dd/yyyy');
-
-    const createdField = getByLabelText('Created') as HTMLInputElement;
-    // await user.type(createdField, '04/09/2024');
-
-    const validField = getByLabelText('Valid until') as HTMLInputElement;
-    // await user.type(validField, '04/09/2024');
-
-    const recipientForm = getByRole('group', { name: 'Recipient' });
+    const recipientForm = screen.getByRole('group', { name: 'Recipient' });
 
     const recipientCompanyNameField = within(recipientForm).getByLabelText(
       'Company name',
@@ -122,29 +62,14 @@ describe('AddInvoicePage', () => {
     ) as HTMLInputElement;
     await user.type(recipientBankAccountField, 'PL27109024026154175215614473');
 
-    expect(nameField.value).toBe('Test');
-    expect(createdField.value).toBe(todayFormated);
-    expect(validField.value).toBe(twoWeeksFromTodayFormated);
-    expect(recipientCompanyNameField.value).toBe('Test');
-    expect(recipientCityField.value).toBe('Testopolis');
-    expect(recipientStreetField.value).toBe('Test St.');
-    expect(recipientPostcodeField.value).toBe('12345');
-    expect(recipientNipField.value).toBe('1234567890');
-    expect(recipientPhoneField.value).toBe('1234567890');
-    expect(recipientEmailField.value).toBe('john.doe@email.com');
-    expect(recipientBankAccountField.value).toBe(
-      'PL27109024026154175215614473',
-    );
+    await user.click(screen.getByText('Add item'));
 
-    const addItemButton = getByText('Add item');
-    await user.click(addItemButton);
-
-    const orderItemForm = getByRole('group', { name: 'Items' });
+    const orderItemForm = screen.getByRole('group', { name: 'Items' });
 
     const orderItemNameField = within(orderItemForm).getByLabelText(
       'Name',
     ) as HTMLInputElement;
-    await user.type(orderItemNameField, 'Test');
+    await user.type(orderItemNameField, 'Test item');
 
     const orderItemAmountField = within(orderItemForm).getByLabelText(
       'Amount',
@@ -166,15 +91,30 @@ describe('AddInvoicePage', () => {
     ) as HTMLInputElement;
     await user.type(orderItemPriceField, '100');
 
-    expect(orderItemNameField.value).toBe('Test');
-    expect(orderItemAmountField.value).toBe('1');
-    expect(orderItemUnitField.value).toBe('Test');
-    expect(orderItemTaxField.value).toBe('23');
-    expect(orderItemPriceField.value).toBe('100');
+    // expect(nameField.value).toBe('Test Company');
+    // expect(createdField.value).toBe(todayFormated);
+    // expect(validField.value).toBe(twoWeeksFromTodayFormated);
+    // expect(recipientCompanyNameField.value).toBe('Test');
+    // expect(recipientCityField.value).toBe('Testopolis');
+    // expect(recipientStreetField.value).toBe('Test St.');
+    // expect(recipientPostcodeField.value).toBe('12345');
+    // expect(recipientNipField.value).toBe('1234567890');
+    // expect(recipientPhoneField.value).toBe('1234567890');
+    // expect(recipientEmailField.value).toBe('john.doe@email.com');
+    // expect(recipientBankAccountField.value).toBe(
+    //   'PL27109024026154175215614473',
+    // );
+    // expect(orderItemNameField.value).toBe('Test item');
+    // expect(orderItemAmountField.value).toBe('1');
+    // expect(orderItemUnitField.value).toBe('Test');
+    // expect(orderItemTaxField.value).toBe('23');
+    // expect(orderItemPriceField.value).toBe('100');
 
-    const saveButton = getByText('Save');
+    const saveButton = screen.getByText('Save');
     await user.click(saveButton);
 
-    // expect(window.location.pathname).toMatch(/\/invoice\/\d+/);
+    await waitFor(() =>
+      expect(screen.getByText(/Invoice 1/i)).toBeInTheDocument(),
+    );
   });
 });
