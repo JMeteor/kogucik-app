@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { test, expect } from 'vitest';
+import { mockInvoice } from './mocks/invoice.mock.ts';
 import App from './App';
 
-test("renders company's header", () => {
+test("renders company's header", async () => {
   render(<App />);
-  const header = screen.getByText(/KOGUCIK APP/i);
-  expect(header).toBeDefined();
+
+  expect(await screen.findByText(mockInvoice.name)).toBeInTheDocument();
 });

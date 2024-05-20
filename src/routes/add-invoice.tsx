@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 
 import { visuallyHidden } from '@mui/utils';
-import { parseISO } from 'date-fns';
+import { addDays, formatISO, parseISO } from 'date-fns';
 
 import { useTranslation } from 'react-i18next';
 import { generateUniqueId } from '../helpers/generateId.ts';
@@ -12,8 +12,7 @@ import { type BillingDetails } from '../types/BillingDetails.ts';
 import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
-
-const todayDate = new Date().toISOString();
+import { useNavigate } from 'react-router-dom';
 
 const billingEmptyValues: BillingDetails = {
   companyName: '',
@@ -26,23 +25,31 @@ const billingEmptyValues: BillingDetails = {
   bankAccount: '',
 };
 
+const todayDate = new Date();
+const validUntil = addDays(todayDate, 14);
+
+const todayISO = formatISO(todayDate);
+const validUntilISO = formatISO(validUntil);
+
 const invoiceEmptyValues: NewInvoice = {
   id: undefined,
   recipient: billingEmptyValues,
   sender: billingEmptyValues,
   items: [],
   name: '',
-  createdAt: todayDate,
-  validUntil: null,
+  createdAt: todayISO,
+  validUntil: validUntilISO,
 };
 
 export const AddInvoicePage = () => {
   const { t } = useTranslation();
   const createInvoiceMutation = useCreateInvoice();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: any) => {
     const id = generateUniqueId();
 
+    console.log('isodate', parseISO(data.createdAt));
     const invoice = {
       ...data,
       id,
@@ -51,7 +58,9 @@ export const AddInvoicePage = () => {
     };
 
     createInvoiceMutation.mutate(invoice, {
-      onSuccess: () => {},
+      onSuccess: () => {
+        navigate('/');
+      },
       onError: () => {},
     });
   };

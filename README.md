@@ -59,7 +59,7 @@ Podejście jest teraz takie żeby pisać testy integracyjne na poziomie modułu
 3. Formularz edycji
 4. Testy failów serwera
 
-QueryClientProvider jet wraperem na całą aplikacje, tego nie mockuje po prostu owijam swój test tym czym używam w 
+QueryClientProvider jest wrapperem na całą aplikacje, tego nie mockuje po prostu owijam swój test tym czym używam w 
 aplikacji
 https://testing-library.com/docs/react-testing-library/setup#custom-render
 zrobić jeden komponent który wrappuje wszystko w komponentach? Nie mockuje query clienta tylko używam rzeczywistego 
@@ -71,7 +71,7 @@ piszesz handlery do wszystkich endpointow ktore chcesz mockowac
 
 PLUS
 * definiując sobie odpowiedzi możesz tak skonfigurować aplikacje że w testach odpalasz serwerek obok aplikacji i on 
-  handluje zapytania testó∑.
+  handluje zapytania testów.
 * Te same handlery możesz zastosować do testowania lokalnie nawet jak nie masz backendu
 * InvoiceList test robie oddzielny folder test/mock-server gdzie definiuje wszystkie handlery ktlrych uzywa aplikacja.
 * Jedną wajchą jesteś w stanie ustalić czy uderzasz do mock czy nie. 
@@ -93,3 +93,14 @@ TODO
 * zamockować MOCK SERVICE WORKEREM: pobieranie listy, invoice pojedynczego, edycja i kasowanie
 * mockowanie bazy danych https://github.com/mswjs/data
 * błędy serwera, błędy walidacji
+
+Spotkanie 4.04
+* wywalić testy invoiceService
+* w AppTsx podpiać  router tak żeby używał tylko potrzebnego. https://testing-library.
+  com/docs/example-react-router/#reducing-boilerplate 
+  * Są dwa sposoby: 1. TODO, 2. 
+  * InvoiceList nie potrzebuje router, ale InvoicePage już tak
+
+* Faker - https://fakerjs.dev/
+* Vitest UI - https://vitest.dev/guide/ui
+* 

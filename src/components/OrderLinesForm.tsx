@@ -46,7 +46,7 @@ export function OrderLinesForm({
   return (
     <StyledFieldset>
       <legend style={visuallyHidden}>
-        <Typography variant="h4">{t('ORDER_LINE.ITEM')}</Typography>
+        <Typography variant="h4">{t('ORDER_LINE.ITEMS')}</Typography>
       </legend>
       {fields.map((field, index) => (
         <OrderLinesRow
@@ -60,12 +60,7 @@ export function OrderLinesForm({
       ))}
       <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
         {isEditMode && (
-          <Button
-            onClick={handleAddItem}
-            color="secondary"
-            variant="contained"
-            type="submit"
-          >
+          <Button onClick={handleAddItem} color="secondary" variant="contained">
             <Box display="flex">
               <Icon sx={{ mr: 1 }}>add</Icon>
               <span>{t('ORDER_LINE.ADD_ITEM')}</span>
