@@ -15,12 +15,15 @@ import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
 import { Loader } from '../components/Loader.tsx';
+import { NotificationAlert } from '../components/NotificationAlert.tsx';
+import { useNotificationContext } from '../providers/NotificationProvider.tsx';
 
 export const ViewInvoicePage = () => {
   const { t } = useTranslation();
   const { id } = z.object({ id: z.string() }).parse(useParams());
   const { data: invoice } = useGetInvoice(id);
   const navigate = useNavigate();
+  const { setShowNotification } = useNotificationContext();
 
   const [searchParams] = useSearchParams();
 
@@ -36,8 +39,11 @@ export const ViewInvoicePage = () => {
       {
         onSuccess: () => {
           navigate(`/invoice/${id}`);
+          setShowNotification(true);
         },
-        onError: () => {},
+        onError: () => {
+          setShowNotification(true);
+        },
       },
     );
   };
@@ -120,26 +126,17 @@ const ViewInvoiceActions = ({
 
 const ViewInvoiceAlerts = ({ useMutation }: any) => {
   return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '10%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      }}
-    >
+    <>
       {useMutation.isSuccess && (
-        <Alert severity="success">
-          <AlertTitle>Success</AlertTitle>
+        <NotificationAlert severity="success" title={'Success'}>
           Invoice saved successfully.
-        </Alert>
+        </NotificationAlert>
       )}
       {useMutation.isError && (
-        <Alert severity="error">
-          <AlertTitle>Error</AlertTitle>
+        <NotificationAlert severity="error" title={'Error'}>
           Something went wrong.
-        </Alert>
+        </NotificationAlert>
       )}
-    </div>
+    </>
   );
 };

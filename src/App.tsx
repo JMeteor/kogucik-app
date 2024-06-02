@@ -14,6 +14,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import NotificationProvider from './providers/NotificationProvider.tsx';
 
 export const routes = [
   {
@@ -41,7 +42,9 @@ function Page() {
     <div className="app">
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          <RouterProvider router={router} />
+          <NotificationProvider>
+            <RouterProvider router={router} />
+          </NotificationProvider>
         </ThemeProvider>
       </LocalizationProvider>
     </div>
