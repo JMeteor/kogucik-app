@@ -40,7 +40,7 @@ export const ViewInvoicePage = () => {
           navigate(`/invoice/${id}`);
           setNotification({
             severity: 'success',
-            title: 'Success',
+            title: <strong>Success</strong>,
             children: 'Invoice saved successfully.',
           });
         },
