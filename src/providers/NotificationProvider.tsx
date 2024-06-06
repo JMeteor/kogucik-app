@@ -1,14 +1,15 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { defaultNotification } from '../components/NotificationAlert.tsx';
+import {
+  NotificationAlert,
+  NotificationAlertProps,
+} from '../components/NotificationAlert.tsx';
 
 interface NotificationContextData {
-  showNotification: boolean;
-  setShowNotification: (showNotification: boolean) => void;
+  setNotification: (notification: NotificationAlertProps | null) => void;
 }
 
 const NotificationContext = createContext<NotificationContextData>({
-  showNotification: false,
-  setShowNotification: () => {},
+  setNotification: () => {},
 });
 
 export const useNotificationContext = () => {
@@ -22,15 +23,19 @@ export const useNotificationContext = () => {
 };
 
 function NotificationProvider({ children }: { children: ReactNode }) {
-  const [showNotification, setShowNotification] = useState(false);
-
-  const value = {
-    showNotification,
-    setShowNotification,
-  };
+  const [notification, setNotification] =
+    useState<NotificationAlertProps | null>(null);
 
   return (
-    <NotificationContext.Provider value={value}>
+    <NotificationContext.Provider value={{ setNotification }}>
+      {notification && (
+        <NotificationAlert
+          title={notification.title}
+          severity={notification.severity}
+        >
+          {notification.children}
+        </NotificationAlert>
+      )}
       {children}
     </NotificationContext.Provider>
   );

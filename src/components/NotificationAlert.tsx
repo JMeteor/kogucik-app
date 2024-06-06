@@ -1,33 +1,31 @@
 import { ReactNode } from 'react';
 import { Alert, AlertTitle } from '@mui/material';
-import { useNotificationContext } from '../providers/NotificationProvider.tsx';
+import styled from '@emotion/styled';
 
-interface NotificationAlertProps {
+export interface NotificationAlertProps {
   severity: 'success' | 'error' | 'info' | 'warning';
-  title?: string;
+  title?: ReactNode;
   children: ReactNode;
 }
+
+const AlertContainer = styled('div')({
+  position: 'absolute',
+  top: '10%',
+  left: '50%',
+  transform: 'translateX(-50%)',
+});
 
 export function NotificationAlert({
   severity,
   title,
   children,
 }: NotificationAlertProps) {
-  const { showNotification } = useNotificationContext();
-
-  return showNotification ? (
-    <div
-      style={{
-        position: 'absolute',
-        top: '10%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      }}
-    >
+  return (
+    <AlertContainer>
       <Alert severity={severity}>
         <AlertTitle>{title}</AlertTitle>
         {children}
       </Alert>
-    </div>
-  ) : null;
+    </AlertContainer>
+  );
 }
