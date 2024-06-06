@@ -26,8 +26,22 @@ function NotificationProvider({ children }: { children: ReactNode }) {
   const [notification, setNotification] =
     useState<NotificationAlertProps | null>(null);
 
+  const handleSetNotification = (
+    notification: NotificationAlertProps | null,
+  ) => {
+    setNotification(notification);
+
+    if (notification !== null) {
+      setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+    }
+  };
+
   return (
-    <NotificationContext.Provider value={{ setNotification }}>
+    <NotificationContext.Provider
+      value={{ setNotification: handleSetNotification }}
+    >
       {notification && (
         <NotificationAlert
           title={notification.title}
