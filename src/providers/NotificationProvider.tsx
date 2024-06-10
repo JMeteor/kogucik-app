@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useRef, useState } from 'react';
 import {
   NotificationAlert,
   NotificationAlertProps,
@@ -11,6 +11,8 @@ interface NotificationContextData {
 const NotificationContext = createContext<NotificationContextData>({
   setNotification: () => {},
 });
+
+const NOTIFICATION_DISPLAY_TIME = 5000;
 
 export const useNotificationContext = () => {
   const context = useContext(NotificationContext);
@@ -25,16 +27,21 @@ export const useNotificationContext = () => {
 function NotificationProvider({ children }: { children: ReactNode }) {
   const [notification, setNotification] =
     useState<NotificationAlertProps | null>(null);
+  const timeoutId = useRef<number | null>(null);
 
   const handleSetNotification = (
     notification: NotificationAlertProps | null,
   ) => {
+    if (timeoutId.current) {
+      clearTimeout(timeoutId.current);
+    }
+
     setNotification(notification);
 
     if (notification !== null) {
-      setTimeout(() => {
+      timeoutId.current = window.setTimeout(() => {
         setNotification(null);
-      }, 5000);
+      }, NOTIFICATION_DISPLAY_TIME);
     }
   };
 
