@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import {
   useParams,
@@ -15,12 +15,14 @@ import { InvoiceForm } from '../components/InvoiceForm.tsx';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';
 import { Loader } from '../components/Loader.tsx';
+import { useNotificationContext } from '../providers/NotificationProvider.tsx';
 
 export const ViewInvoicePage = () => {
   const { t } = useTranslation();
   const { id } = z.object({ id: z.string() }).parse(useParams());
   const { data: invoice } = useGetInvoice(id);
   const navigate = useNavigate();
+  const { setNotification } = useNotificationContext();
 
   const [searchParams] = useSearchParams();
 
@@ -36,8 +38,19 @@ export const ViewInvoicePage = () => {
       {
         onSuccess: () => {
           navigate(`/invoice/${id}`);
+          setNotification({
+            severity: 'success',
+            title: <strong>Success</strong>,
+            children: 'Invoice saved successfully.',
+          });
         },
-        onError: () => {},
+        onError: () => {
+          setNotification({
+            severity: 'error',
+            title: 'Error',
+            children: 'Something went wrong.',
+          });
+        },
       },
     );
   };
@@ -50,7 +63,6 @@ export const ViewInvoicePage = () => {
         </Box>
       </header>
 
-      <ViewInvoiceAlerts useMutation={updateInvoiceMutation} />
       {invoice ? (
         <InvoiceForm
           defaultValues={invoice}
@@ -115,31 +127,5 @@ const ViewInvoiceActions = ({
         </Button>
       )}
     </>
-  );
-};
-
-const ViewInvoiceAlerts = ({ useMutation }: any) => {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '10%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-      }}
-    >
-      {useMutation.isSuccess && (
-        <Alert severity="success">
-          <AlertTitle>Success</AlertTitle>
-          Invoice saved successfully.
-        </Alert>
-      )}
-      {useMutation.isError && (
-        <Alert severity="error">
-          <AlertTitle>Error</AlertTitle>
-          Something went wrong.
-        </Alert>
-      )}
-    </div>
   );
 };
